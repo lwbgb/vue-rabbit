@@ -8,7 +8,7 @@
   "singleAttributePerLine": false,
   "overrides": [
     {
-      "files":["*.html", "*.vue", "*.jsp", "*.json"],
+      "files":["*.html", "*.vue", "*.jsp", "*.json", "*.scss"],
       "options": {
         "tabWidth": 2
       }
