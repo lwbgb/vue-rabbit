@@ -1,10 +1,11 @@
 <template>
   <div>首页</div>
-  <router-view>
-
-  </router-view>
+  <p>{{ $route.fullPath }}</p>
+  <RouterView />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+console.log();
+</script>
 
 <style scoped></style>

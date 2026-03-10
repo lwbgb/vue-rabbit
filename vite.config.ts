@@ -36,7 +36,12 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@use "@/styles/element/index.scss" as *;`,
+                additionalData: `
+                // 全局引入 Element Plus 的样式，供所有组件使用
+                @use "@/styles/element/index.scss" as *;
+                // 全局引入变量文件，供所有组件使用
+                @use "@/styles/var.scss" as *;
+                `,
             },
         },
     },

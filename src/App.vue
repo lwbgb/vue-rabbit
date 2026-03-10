@@ -13,7 +13,7 @@ onMounted(() => {
 <template>
   <el-button type="primary" plain>Primary</el-button>
   <router-view>
-    
+
   </router-view>
 </template>
 

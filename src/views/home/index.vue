@@ -1,7 +1,11 @@
 <template>
-  <div>Home 页面</div>
+  <div class="title">Home 页面</div>
 </template>
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.title {
+  color: $xtxColor;
+}
+</style>
