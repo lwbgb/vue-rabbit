@@ -4,8 +4,8 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'CategoryPage'
-})
+  name: 'CategoryPage',
+});
 </script>
 
 <style scoped></style>
