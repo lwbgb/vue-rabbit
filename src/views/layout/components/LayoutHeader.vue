@@ -19,20 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import { getCategory } from '@/apis/layout';
-import type { HeaderCategory } from '@/types/HeaderCategory';
-import { onMounted, ref } from 'vue';
+import { useCategoryStore } from '@/stores/category';
+import { storeToRefs } from 'pinia';
 
-const categoryList = ref<Array<HeaderCategory>>([]);
-const initCategory = async () => {
-  const res = await getCategory();
-  console.log(res);
-  categoryList.value = res.data.result;
-};
-
-onMounted(() => {
-  initCategory();
-});
+const categoryStore = useCategoryStore();
+const { categoryList } = storeToRefs(categoryStore);
 </script>
 
 <style scoped lang="scss">

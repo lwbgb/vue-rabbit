@@ -1,6 +1,6 @@
 <template>
-  <div>首页</div>
-  <p>{{ $route.fullPath }}</p>
+  <!-- <p>{{ $route.fullPath }}</p> -->
+  <LayoutFixed />
   <LayoutNav />
   <LayoutHeader />
   <RouterView />
@@ -8,11 +8,19 @@
 </template>
 
 <script setup lang="ts">
+import { useCategoryStore } from '@/stores/category';
+import LayoutFixed from './components/LayoutFixed.vue';
 import LayoutFooter from './components/LayoutFooter.vue';
 import LayoutHeader from './components/LayoutHeader.vue';
 import LayoutNav from './components/LayoutNav.vue';
+import { onMounted } from 'vue';
 
-console.log();
+const categoryStore = useCategoryStore();
+const { initCategory } = categoryStore;
+
+onMounted(() => {
+  initCategory();
+});
 </script>
 
 <style scoped></style>
