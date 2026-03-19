@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { getCategory } from '@test/apis/test';
-import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
-
 
 </script>
 

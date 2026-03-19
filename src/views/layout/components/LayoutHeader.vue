@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCategoryStore } from '@/stores/category';
+import { useCategoryStore } from '@/stores/categoryStore';
 import { storeToRefs } from 'pinia';
 
 const categoryStore = useCategoryStore();

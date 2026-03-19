@@ -14,6 +14,15 @@ import HomeBanner from './components/HomeBanner.vue';
 import HomeNew from './components/HomeNew.vue';
 import HomeHot from './components/HomeHot.vue';
 import HomeProduct from './components/HomeProduct.vue';
+import { onMounted } from 'vue';
+import { useHomeStore } from '@/stores/homeStore';
+
+const homeStore = useHomeStore();
+const { initHomeBanner } = homeStore;
+
+onMounted(() => {
+  initHomeBanner();
+});
 </script>
 
 <style scoped lang="scss">

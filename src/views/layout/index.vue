@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCategoryStore } from '@/stores/category';
+import { useCategoryStore } from '@/stores/categoryStore';
 import LayoutFixed from './components/LayoutFixed.vue';
 import LayoutFooter from './components/LayoutFooter.vue';
 import LayoutHeader from './components/LayoutHeader.vue';
