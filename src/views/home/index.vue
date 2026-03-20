@@ -6,6 +6,7 @@
   <HomeNew />
   <HomeHot />
   <HomeProduct/>
+
 </template>
 
 <script setup lang="ts">
@@ -16,6 +17,7 @@ import HomeHot from './components/HomeHot.vue';
 import HomeProduct from './components/HomeProduct.vue';
 import { onMounted } from 'vue';
 import { useHomeStore } from '@/stores/homeStore';
+import HomePanel from './components/HomePanel.vue';
 
 const homeStore = useHomeStore();
 const { initHomeBanner } = homeStore;

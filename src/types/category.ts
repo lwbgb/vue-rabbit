@@ -1,11 +1,4 @@
-export interface Good {
-    id: string;
-    name: string;
-    price: string;
-    orderNum: number;
-    desc: string;
-    picture: string;
-}
+import type { Good } from './good';
 
 export interface HeaderCategory {
     id: string;

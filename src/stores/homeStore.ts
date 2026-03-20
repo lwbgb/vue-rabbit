@@ -7,7 +7,7 @@ export const useHomeStore = defineStore('home', () => {
     const bannerList = ref<Array<HomeBanner>>([]);
     const initHomeBanner = async () => {
         const res = await getHomeBanner();
-        console.log({ res });
+        console.log(`getHomeBanner res:`, res);
         bannerList.value = res.data.result;
     };
 
