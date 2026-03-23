@@ -5,4 +5,6 @@ export interface Good {
     orderNum: number;
     desc: string;
     picture: string;
+    title: string;
+    alt: string;
 }
