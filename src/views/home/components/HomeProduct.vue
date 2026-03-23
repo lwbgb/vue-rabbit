@@ -4,6 +4,7 @@
       <div class="box">
         <RouterLink class="cover" to="/">
           <img v-img-lazy="cate.picture" />
+          <!-- 使用 v-img-lazy 指令实现图片懒加载 -->
           <strong class="label">
             <span>{{ cate.name }}馆</span>
             <span>{{ cate.saleInfo }}</span>
@@ -11,12 +12,7 @@
         </RouterLink>
         <ul class="goods-list">
           <li v-for="good in cate.goods" :key="good.id">
-            <RouterLink to="/" class="goods-item">
-              <img v-img-lazy="good.picture" alt="" />
-              <p class="name ellipsis">{{ good.name }}</p>
-              <p class="desc ellipsis">{{ good.desc }}</p>
-              <p class="price">&yen;{{ good.price }}</p>
-            </RouterLink>
+            <GoodItem :good="good" />
           </li>
         </ul>
       </div>
@@ -26,11 +22,12 @@
 
 <script setup lang="ts">
 import { getProduct } from '@/apis/homeApi';
-import type { Product } from '@/types/product';
+import type { ProductCategory } from '@/types/product';
 import { onMounted, ref } from 'vue';
 import HomePanel from './HomePanel.vue';
+import GoodItem from './GoodItem.vue';
 
-const productList = ref<Array<Product>>([]);
+const productList = ref<Array<ProductCategory>>([]);
 const initProductList = async () => {
   const res = await getProduct();
   console.log(`getProduct res:`, res);
@@ -40,7 +37,6 @@ const initProductList = async () => {
 onMounted(() => {
   initProductList();
 });
-
 </script>
 
 <style scoped lang="scss">
@@ -135,7 +131,7 @@ onMounted(() => {
       width: 220px;
       padding: 20px 30px;
       text-align: center;
-      transition: all .5s;
+      transition: all 0.5s;
 
       &:hover {
         transform: translate3d(0, -3px, 0);

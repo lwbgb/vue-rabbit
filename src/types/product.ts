@@ -1,17 +1,17 @@
 import type { Good } from './good';
 
-export interface Product {
+export interface ProductCategory {
     id: number;
     name: string;
     picture: string;
-    children: Array<Cate>;
+    children: Array<Product>;
     goods: Array<Good>;
     saleInfo: string;
 }
 
-export interface Cate {
+export interface Product {
     id: number;
     layer: number;
     name: string;
-    parent: Product | null;
+    parent: ProductCategory | null;
 }
