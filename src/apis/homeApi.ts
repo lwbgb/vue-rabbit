@@ -17,3 +17,9 @@ export function getHotGoods() {
         url: 'home/hot',
     });
 }
+
+export function getProduct() {
+    return axiosInstance({
+        url: 'home/goods',
+    });
+}

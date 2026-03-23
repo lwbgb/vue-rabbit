@@ -1,14 +1,14 @@
 <template>
   <HomePanel title="热销好物" subTitle="热销爆款 品质保障">
     <ul class="goods-list">
-        <li v-for="item in hotList" :key="item.id">
-          <RouterLink to="/">
-            <img v-img-lazy="item.picture" :alt="item.title" />
-            <p class="name">{{ item.title }}</p>
-            <p class="desc">{{ item.alt }}</p>
-          </RouterLink>
-        </li>
-      </ul>
+      <li v-for="item in hotList" :key="item.id">
+        <RouterLink to="/">
+          <img v-img-lazy="item.picture" :alt="item.title" />
+          <p class="name">{{ item.title }}</p>
+          <p class="desc">{{ item.alt }}</p>
+        </RouterLink>
+      </li>
+    </ul>
   </HomePanel>
 </template>
 
@@ -39,7 +39,7 @@ onMounted(() => {
   li {
     width: 306px;
     height: 406px;
-    transition: all .5s;
+    transition: all 0.5s;
 
     &:hover {
       transform: translate3d(0, -3px, 0);

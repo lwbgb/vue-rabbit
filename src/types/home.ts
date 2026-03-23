@@ -1,6 +1,6 @@
 export interface HomeBanner {
-    id: string,
-    type: string,
+    id: number,
+    type: number,
     hrefUrl: string,
     imgUrl: string
 }

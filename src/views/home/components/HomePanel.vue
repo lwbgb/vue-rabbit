@@ -8,16 +8,15 @@
         </h3>
       </div>
       <!-- 主体内容区域 -->
-       <slot></slot>
+      <slot></slot>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps<{
   title: string;
-  subTitle: string;
+  subTitle?: string;
 }>();
 </script>
 

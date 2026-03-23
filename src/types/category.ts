@@ -1,7 +1,7 @@
 import type { Good } from './good';
 
 export interface HeaderCategory {
-    id: string;
+    id: number;
     name: string;
     picture: string;
     children: Array<HeaderCategory>;

@@ -1,5 +1,5 @@
 export interface Good {
-    id: string;
+    id: number;
     name: string;
     price: string;
     orderNum: number;
