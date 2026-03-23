@@ -1,5 +1,4 @@
 <template>
-  <!-- <p>{{ $route.fullPath }}</p> -->
   <LayoutFixed />
   <LayoutNav />
   <LayoutHeader />
