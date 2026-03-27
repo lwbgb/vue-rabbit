@@ -23,3 +23,10 @@ export function getProduct() {
         url: 'home/goods',
     });
 }
+
+export function getCategoryInfoById(id: number) {
+    return axiosInstance({
+        url: '/category',
+        params: { id }
+    });
+}

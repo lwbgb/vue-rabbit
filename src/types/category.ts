@@ -7,3 +7,10 @@ export interface HeaderCategory {
     children: Array<HeaderCategory>;
     goods: Array<Good>;
 }
+
+export interface CategoryInfo {
+    id: number
+    name: string
+    picture: string
+    children: Array<HeaderCategory>
+}
