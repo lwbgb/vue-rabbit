@@ -35,7 +35,7 @@ export default defineConfigWithVueTs(
             'vue/no-mutating-props': 'off',
 
             '@typescript-eslint/no-unused-vars': [
-                'warn',
+                'off',
                 {
                     args: 'after-used',
                     argsIgnorePattern: '^_',

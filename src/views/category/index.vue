@@ -42,50 +42,16 @@
 </template>
 
 <script setup lang="ts">
-import { getCategoryInfoById } from '@/apis/homeApi';
-import { onMounted, ref, watchEffect } from 'vue';
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
-import { type CategoryInfo } from '@/types/category';
-import { useHomeStore } from '@/stores/homeStore';
-import { storeToRefs } from 'pinia';
-import { HomeBannerType } from '@/constants/component.const';
 import GoodItem from '../Home/components/GoodItem.vue';
-import { get } from '@vueuse/core';
+import { useCategory } from './composables/useCategory';
+import { useBanner } from './composables/useBanner';
 
-const categoryInfo = ref<CategoryInfo>();
-// const route = useRoute();
 const props = defineProps<{
   id: string;
 }>();
 
-const getCategoryInfo = async (id: string = props.id) => {
-  // const res = await getCategoryInfoById(+(route.params.id ?? 0));
-  const res = await getCategoryInfoById(id);
-  console.log(`getCategoryInfo:`, res);
-  categoryInfo.value = res.data.result;
-};
-
-const homeStore = useHomeStore();
-const { bannerList } = storeToRefs(homeStore);
-const { initHomeBanner } = homeStore;
-
-onMounted(() => {
-  // getCategoryInfo();
-  initHomeBanner(HomeBannerType.CATEGORY_PAGE);
-});
-
-// 路由缓存时，相同的组件实例会被复用，组件的生命周期钩子不会被重复调用。有以下 3 中方法解决：
-// 1. 为路由添加唯一的 key，强制组件重新渲染
-// 2. 使用 watch 监听路由参数的变化，手动调用数据获取
-// 3. 使用 onBeforeRouteUpdate 钩子，在路由更新时获取数据
-
-watchEffect(async () => {
-  await getCategoryInfo(props.id);
-});
-
-// onBeforeRouteUpdate(async (to) => {
-//   await getCategoryInfo(to.params.id as string);
-// });
+const { categoryInfo } = useCategory(props);
+const { bannerList } = useBanner();
 </script>
 
 <style scoped lang="scss">
