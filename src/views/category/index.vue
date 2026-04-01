@@ -16,6 +16,27 @@
           </el-carousel-item>
         </el-carousel>
       </div>
+
+      <!-- 分类数据 -->
+      <div class="sub-list">
+        <h3>全部分类</h3>
+        <ul>
+          <li v-for="i in categoryInfo?.children" :key="i.id">
+            <RouterLink to="/">
+              <img :src="i.picture" />
+              <p>{{ i.name }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+      <div class="ref-goods" v-for="item in categoryInfo?.children" :key="item.id">
+        <div class="head">
+          <h3>- {{ item.name }}-</h3>
+        </div>
+        <div class="body">
+          <GoodItem v-for="good in item.goods" :key="good.id" :good="good" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -27,6 +48,8 @@ import { useRoute } from 'vue-router';
 import { type CategoryInfo } from '@/types/category';
 import { useHomeStore } from '@/stores/homeStore';
 import { storeToRefs } from 'pinia';
+import { HomeBannerType } from '@/constants/component.const';
+import GoodItem from '../Home/components/GoodItem.vue';
 
 const categoryInfo = ref<CategoryInfo>();
 // const route = useRoute();
@@ -47,7 +70,7 @@ const { initHomeBanner } = homeStore;
 
 onMounted(() => {
   getCategoryInfo();
-  initHomeBanner('2');
+  initHomeBanner(HomeBannerType.CATEGORY_PAGE);
 });
 </script>
 

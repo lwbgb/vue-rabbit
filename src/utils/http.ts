@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { AXIOS_CONFIG } from '@/constants/http.const';
+import { AxiosConfig } from '@/constants/http.const';
 
 // 配置 Axios 实例
 export const axiosInstance = axios.create({
-    baseURL: AXIOS_CONFIG.BASE_URL,
-    timeout: AXIOS_CONFIG.TIME_OUT,
+    baseURL: AxiosConfig.BASE_URL,
+    timeout: AxiosConfig.TIME_OUT,
 });
 
 // 添加请求拦截器
