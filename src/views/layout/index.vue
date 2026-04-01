@@ -2,6 +2,9 @@
   <LayoutFixed />
   <LayoutNav />
   <LayoutHeader />
+  <!-- 为路由视图提供唯一的key，确保在路由切换时重新渲染 -->
+  <!-- 缺陷：会导致视图内的所有组件都重新渲染 -->
+  <!-- <RouterView :key="$route.fullPath" /> -->
   <RouterView />
   <LayoutFooter />
 </template>
