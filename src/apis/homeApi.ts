@@ -1,8 +1,9 @@
 import { axiosInstance } from '@/utils/http';
 
-export function getHomeBanner() {
+export function getHomeBanner(distributionSite: string) {
     return axiosInstance({
         url: 'home/banner',
+        params: { distributionSite },
     });
 }
 
@@ -24,9 +25,9 @@ export function getProduct() {
     });
 }
 
-export function getCategoryInfoById(id: number) {
+export function getCategoryInfoById(id: string) {
     return axiosInstance({
         url: '/category',
-        params: { id }
+        params: { id },
     });
 }

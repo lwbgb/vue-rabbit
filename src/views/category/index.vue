@@ -8,6 +8,14 @@
           <el-breadcrumb-item>{{ categoryInfo?.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+      <!-- 轮播图 -->
+      <div class="home-banner">
+        <el-carousel height="500px">
+          <el-carousel-item v-for="item in bannerList" :key="item.id">
+            <img :src="item.imgUrl" alt="" />
+          </el-carousel-item>
+        </el-carousel>
+      </div>
     </div>
   </div>
 </template>
@@ -17,18 +25,29 @@ import { getCategoryInfoById } from '@/apis/homeApi';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { type CategoryInfo } from '@/types/category';
+import { useHomeStore } from '@/stores/homeStore';
+import { storeToRefs } from 'pinia';
 
 const categoryInfo = ref<CategoryInfo>();
-// const route = [{path: '/category/:id', component: this, props: true}];
-const route = useRoute();
+// const route = useRoute();
+const props = defineProps<{
+  id: string;
+}>();
+
 const getCategoryInfo = async () => {
-  const res = await getCategoryInfoById(+route.params.id!);
+  // const res = await getCategoryInfoById(+(route.params.id ?? 0));
+  const res = await getCategoryInfoById(props.id);
   console.log(`getCategoryInfo:`, res);
   categoryInfo.value = res.data.result;
 };
 
+const homeStore = useHomeStore();
+const { bannerList } = storeToRefs(homeStore);
+const { initHomeBanner } = homeStore;
+
 onMounted(() => {
   getCategoryInfo();
+  initHomeBanner('2');
 });
 </script>
 
@@ -107,6 +126,17 @@ onMounted(() => {
 
   .bread-container {
     padding: 25px 0;
+  }
+}
+
+.home-banner {
+  width: 1240px;
+  height: 500px;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: 500px;
   }
 }
 </style>

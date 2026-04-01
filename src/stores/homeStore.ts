@@ -5,8 +5,8 @@ import { ref } from 'vue';
 
 export const useHomeStore = defineStore('home', () => {
     const bannerList = ref<Array<HomeBanner>>([]);
-    const initHomeBanner = async () => {
-        const res = await getHomeBanner();
+    const initHomeBanner = async (distributionSite: string = '1') => {
+        const res = await getHomeBanner(distributionSite);
         console.log(`getHomeBanner res:`, res);
         bannerList.value = res.data.result;
     };

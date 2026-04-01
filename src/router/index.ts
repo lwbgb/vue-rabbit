@@ -14,7 +14,8 @@ const router = createRouter({
             // 二级路由
             children: [
                 { path: '', component: home },
-                { path: 'category/:id', component: category },
+                // 开启 props 将参数转化为 props 传递
+                { path: 'category/:id', component: category, props: true},
             ],
         },
         { path: '/login', component: login },

@@ -9,8 +9,8 @@ export interface HeaderCategory {
 }
 
 export interface CategoryInfo {
-    id: number
-    name: string
-    picture: string
-    children: Array<HeaderCategory>
+    id: number;
+    name: string;
+    picture: string;
+    children: Array<HeaderCategory>;
 }
