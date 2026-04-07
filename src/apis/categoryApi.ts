@@ -24,12 +24,13 @@ export function getCategoryFilterById(id: string) {
    }
  * @return {*}
  */
-export const getSubCategoryInfo = (data: {
+export interface SubCategoryPageDTO {
     categoryId: number;
     page: number;
     pageSize: number;
     sortField: 'publishTime' | 'orderNum' | 'evaluateNum';
-}) => {
+}
+export const getSubCategoryInfo = (data: SubCategoryPageDTO) => {
     return axiosInstance({
         url: '/category/goods/temporary',
         method: 'POST',
