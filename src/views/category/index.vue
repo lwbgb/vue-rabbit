@@ -21,10 +21,10 @@
       <div class="sub-list">
         <h3>全部分类</h3>
         <ul>
-          <li v-for="i in categoryInfo?.children" :key="i.id">
-            <RouterLink to="/">
-              <img :src="i.picture" />
-              <p>{{ i.name }}</p>
+          <li v-for="subCategory in categoryInfo?.children" :key="subCategory.id">
+            <RouterLink to="/category/sub/{{ subCategory.id }}">
+              <img :src="subCategory.picture" />
+              <p>{{ subCategory.name }}</p>
             </RouterLink>
           </li>
         </ul>
