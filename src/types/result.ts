@@ -4,3 +4,10 @@ export interface Result<T> {
     msg: string;
 }
 
+export interface PageResult<T> {
+    page: number;
+    pageSize: number;
+    pages: number;
+    counts: number;
+    items: Array<T>;
+}

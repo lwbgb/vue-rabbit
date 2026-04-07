@@ -18,15 +18,19 @@
       </el-tabs>
       <div class="body">
         <!-- 商品列表-->
+        <good-item v-for="good in pageResult?.items" :key="good.id" :good="good"></good-item>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getCategoryFilterById } from '@/apis/categoryApi';
+import { getCategoryFilterById, getSubCategoryInfo } from '@/apis/categoryApi';
 import type { SubCategory } from '@/types/category';
+import type { Good } from '@/types/good';
+import type { PageResult } from '@/types/result';
 import { onMounted, ref } from 'vue';
+import GoodItem from '../Home/components/GoodItem.vue';
 
 const props = defineProps({
   id: {
@@ -36,14 +40,27 @@ const props = defineProps({
 });
 
 const subCategoryInfo = ref<SubCategory>();
-const getSubCategoryInfo = async () => {
+const getSubCategories = async () => {
   const res = await getCategoryFilterById(props.id);
-  console.log(`getSubCategoryInfo`, res);
+  console.log(`getSubCategories`, res);
   subCategoryInfo.value = res.data.result;
 };
 
+const pageResult = ref<PageResult<Good>>();
+const getSubCategory = async () => {
+  const res = await getSubCategoryInfo({
+    categoryId: +props.id,
+    page: 1,
+    pageSize: 10,
+    sortField: 'publishTime',
+  });
+  console.log(`getSubCategory`, res);
+  pageResult.value = res.data.result;
+};
+
 onMounted(() => {
-  getSubCategoryInfo();
+  getSubCategories();
+  getSubCategory();
 });
 </script>
 
