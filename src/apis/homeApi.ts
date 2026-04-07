@@ -25,9 +25,9 @@ export function getProduct() {
     });
 }
 
-export function getCategoryInfoById(id: string) {
+export function getCategory() {
     return axiosInstance({
-        url: '/category',
-        params: { id },
+        url: '/home/category/head',
     });
 }
+

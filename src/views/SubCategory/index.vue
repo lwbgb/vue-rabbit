@@ -4,8 +4,10 @@
     <div class="bread-container">
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/' }">居家 </el-breadcrumb-item>
-        <el-breadcrumb-item>居家生活用品</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/category/${subCategoryInfo?.parentId}` }"
+          >{{ subCategoryInfo?.parentName }}
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>{{ subCategoryInfo?.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="sub-container">
@@ -22,7 +24,27 @@
 </template>
 
 <script setup lang="ts">
+import { getCategoryFilterById } from '@/apis/categoryApi';
+import type { SubCategory } from '@/types/category';
+import { onMounted, ref } from 'vue';
 
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const subCategoryInfo = ref<SubCategory>();
+const getSubCategoryInfo = async () => {
+  const res = await getCategoryFilterById(props.id);
+  console.log(`getSubCategoryInfo`, res);
+  subCategoryInfo.value = res.data.result;
+};
+
+onMounted(() => {
+  getSubCategoryInfo();
+});
 </script>
 
 <style scoped lang="scss">

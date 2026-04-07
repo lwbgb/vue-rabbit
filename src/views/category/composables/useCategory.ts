@@ -1,4 +1,4 @@
-import { getCategoryInfoById } from '@/apis/homeApi';
+import { getCategoryInfoById } from '@/apis/categoryApi';
 import type { CategoryInfo } from '@/types/category';
 import { onMounted, ref, watchEffect } from 'vue';
 

@@ -17,7 +17,7 @@ const router = createRouter({
                 { path: '', component: home },
                 // 开启 props 将参数转化为 props 传递
                 { path: 'category/:id', component: category, props: true },
-                { path: 'category/sub/:id', component: subCategory },
+                { path: 'category/sub/:id', component: subCategory, props: true },
             ],
         },
         { path: '/login', component: login },
