@@ -4,6 +4,7 @@ import login from '@/views/Login/index.vue';
 import home from '@/views/Home/index.vue';
 import category from '@/views/Category/index.vue';
 import subCategory from '@/views/SubCategory/index.vue';
+import detail from '@/views/Detail/index.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,7 @@ const router = createRouter({
                 // 开启 props 将参数转化为 props 传递
                 { path: 'category/:id', component: category, props: true },
                 { path: 'category/sub/:id', component: subCategory, props: true },
+                { path: 'detail/:id', component: detail, props: true },
             ],
         },
         { path: '/login', component: login },
