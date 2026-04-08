@@ -10,21 +10,22 @@
         <el-breadcrumb-item>{{ subCategoryInfo?.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
+
     <div class="sub-container">
       <el-tabs v-model="params.sortField" @tab-change="tabChange">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body">
-        <!-- 商品列表-->
-      </div>
-      <el-scrollbar class="goods-scrollbar" @end-reached="loadMore" :distance="80">
-        <div class="goods-list">
-          <good-item v-for="good in itemList" :key="good.id" :good="good"></good-item>
-        </div>
-        <div v-if="isLoading" class="load-status">加载中...</div>
-        <div v-else-if="!hasMore" class="load-status">没有更多了</div>
+      <!-- 商品列表-->
+      <!-- 1. v-infinite-scroll 实现无限滚动 -->
+      <!-- <div class="body" v-infinite-scroll="load" :infinite-scroll-disabled="disabled" infinite-scroll-distance="100">
+        <good-item v-for="good in itemList" :key="good.id" :good="good"></good-item>
+      </div> -->
+
+      <!-- 2. el-scrollbar 实现无限滚动 -->
+      <el-scrollbar @end-reached="loadMore" noresize="true" view-class="body" distance="80">
+        <good-item v-for="good in itemList" :key="good.id" :good="good"></good-item>
       </el-scrollbar>
     </div>
   </div>
@@ -55,8 +56,7 @@ const getSubCategories = async () => {
 
 const pageResult = ref<PageResult<Good>>();
 const itemList = ref<Array<Good>>([]);
-const isLoading = ref(false);
-const hasMore = ref(true);
+const disabled = ref(false);
 const params = ref<SubCategoryPageDTO>({
   categoryId: +props.id,
   page: 1,
@@ -65,17 +65,17 @@ const params = ref<SubCategoryPageDTO>({
 });
 
 const getSubCategory = async () => {
-  isLoading.value = true;
   const res = await getSubCategoryInfo(params.value);
   console.log(`getSubCategory, res:`, res);
   pageResult.value = res.data.result;
   itemList.value = res.data.result.items;
-  isLoading.value = false;
 };
 
 onMounted(() => {
   getSubCategories();
   getSubCategory();
+  // 首次主动加载一页
+  loadMore('bottom');
 });
 
 const tabChange = () => {
@@ -83,18 +83,27 @@ const tabChange = () => {
   getSubCategory();
 };
 
+const load = async () => {
+  params.value.page++;
+  const res = await getSubCategoryInfo(params.value);
+  pageResult.value = res.data.result;
+  if (itemList.value && pageResult.value?.items && pageResult.value.items.length > 0) {
+    itemList.value = [...itemList.value, ...pageResult.value.items];
+  } else {
+    disabled.value = true;
+  }
+};
+
 const loadMore = async (direction: ScrollbarDirection) => {
-  if (direction === 'bottom') {
-    isLoading.value = true;
+  if (direction === 'bottom' && !disabled.value) {
     params.value.page++;
     const res = await getSubCategoryInfo(params.value);
     pageResult.value = res.data.result;
-    if (itemList.value && pageResult.value?.items) {
+    if (itemList.value && pageResult.value?.items && pageResult.value.items.length > 0) {
       itemList.value = [...itemList.value, ...pageResult.value.items];
     } else {
-      hasMore.value = false;
+      disabled.value = true;
     }
-    isLoading.value = false;
   }
 };
 </script>
@@ -114,20 +123,12 @@ const loadMore = async (direction: ScrollbarDirection) => {
     flex-wrap: wrap;
     padding: 0 10px;
   }
-  .goods-scrollbar {
-    height: 700px;
-  }
 
-  .goods-list {
+  :deep(.body) {
     display: flex;
     flex-wrap: wrap;
-  }
-
-  .load-status {
-    padding: 16px 0;
-    text-align: center;
-    color: #999;
-    font-size: 14px;
+    padding: 0 10px;
+    max-height: 1500px;
   }
 
   .goods-item {
