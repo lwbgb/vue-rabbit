@@ -1,12 +1,16 @@
 <template>
   <div class="xtx-goods-page">
-    <div class="container">
+    <div class="container" v-if="details">
       <div class="bread-container">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/' }">母婴 </el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/' }">跑步鞋 </el-breadcrumb-item>
-          <el-breadcrumb-item>抓绒保暖，毛毛虫子儿童运动鞋</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: `/category/${details.categories[1]?.id}` }">
+            {{ details.categories[1]?.name }}
+          </el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: `/category/${details.categories[0]?.id}` }"
+            >{{ details.categories[0]?.name }}
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>{{ details.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <!-- 商品信息 -->
@@ -102,7 +106,27 @@
 </template>
 
 <script setup lang="ts">
+import { getDetail } from '@/apis/detailApi';
+import type { GoodDetail } from '@/types/good';
+import { onMounted, ref } from 'vue';
 
+const details = ref<GoodDetail>();
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+async function getGoodDetail() {
+  const res = await getDetail(props.id);
+  console.log(`getGoodDetail res:`, res);
+  details.value = res.data.result;
+}
+
+onMounted(() => {
+  getGoodDetail();
+});
 </script>
 
 <style scoped lang="scss">
