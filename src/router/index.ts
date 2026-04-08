@@ -22,6 +22,10 @@ const router = createRouter({
         },
         { path: '/login', component: login },
     ],
+    // 设置切换路由时，页面滚动的位置
+    scrollBehavior(to, from, savedPosition) {
+        return { top: 0, behavior: 'smooth' };
+    },
 });
 
 export default router;
