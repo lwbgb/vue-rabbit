@@ -19,6 +19,7 @@
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
+              <ImageView />
 
               <!-- 统计数量 -->
               <ul class="goods-sales">
@@ -116,6 +117,7 @@ import { getDetail, getHotList } from '@/apis/detailApi';
 import type { Good, GoodDetail } from '@/types/good';
 import { onMounted, ref } from 'vue';
 import GoodItem from '../components/GoodItem.vue';
+import ImageView from '@/components/ImageView/index.vue';
 
 enum HotType {
   Day = 1,
