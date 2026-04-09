@@ -1,7 +1,7 @@
 <template>
   <div class="goods-image">
     <!-- 左侧大图-->
-    <div class="middle" ref="target" v-mouse-in-element="onMouseInElement">
+    <div class="middle" v-mouse-in-element="onMouseInElement">
       <img :src="imageList[activeIndex]" />
       <!-- 蒙层小滑块 -->
       <div class="layer" v-show="!disabled" :style="{ left: `${pos.left}px`, top: `${pos.top}px` }"></div>
@@ -33,13 +33,10 @@ import type { MouseInElementType } from '@/types/vueUse';
 import { vMouseInElement } from '@vueuse/components';
 import { ref } from 'vue';
 
-const imageList = [
-  'https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png',
-  'https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg',
-  'https://yanxuan-item.nosdn.127.net/b52c447ad472d51adbdde1a83f550ac2.jpg',
-  'https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg',
-  'https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg',
-];
+const { imageList } = defineProps<{
+  imageList: Array<string>;
+}>();
+
 const activeIndex = ref(0);
 const pos = ref<{ left: number; top: number }>({ left: 0, top: 0 });
 const disabled = ref(true);
