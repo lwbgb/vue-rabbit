@@ -1,16 +1,16 @@
 <template>
   <div class="xtx-goods-page">
-    <div class="container" v-if="details">
+    <div class="container" v-if="goodDetails">
       <div class="bread-container">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${details.categories[1]?.id}` }">
-            {{ details.categories[1]?.name }}
+          <el-breadcrumb-item :to="{ path: `/category/${goodDetails.categories[1]?.id}` }">
+            {{ goodDetails.categories[1]?.name }}
           </el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${details.categories[0]?.id}` }"
-            >{{ details.categories[0]?.name }}
+          <el-breadcrumb-item :to="{ path: `/category/${goodDetails.categories[0]?.id}` }"
+            >{{ goodDetails.categories[0]?.name }}
           </el-breadcrumb-item>
-          <el-breadcrumb-item>{{ details.name }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ goodDetails.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <!-- 商品信息 -->
@@ -24,33 +24,33 @@
               <ul class="goods-sales">
                 <li>
                   <p>销量人气</p>
-                  <p>100+</p>
+                  <p>{{ goodDetails.salesCount }}</p>
                   <p><i class="iconfont icon-task-filling"></i>销量人气</p>
                 </li>
                 <li>
                   <p>商品评价</p>
-                  <p>200+</p>
+                  <p>{{ goodDetails.commentCount }}</p>
                   <p><i class="iconfont icon-comment-filling"></i>查看评价</p>
                 </li>
                 <li>
                   <p>收藏人气</p>
-                  <p>300+</p>
+                  <p>{{ goodDetails.collectCount }}</p>
                   <p><i class="iconfont icon-favorite-filling"></i>收藏商品</p>
                 </li>
                 <li>
                   <p>品牌信息</p>
-                  <p>400+</p>
+                  <p>{{ goodDetails.brand?.name }}</p>
                   <p><i class="iconfont icon-dynamic-filling"></i>品牌主页</p>
                 </li>
               </ul>
             </div>
             <div class="spec">
               <!-- 商品信息区 -->
-              <p class="g-name">抓绒保暖，毛毛虫儿童鞋</p>
-              <p class="g-desc">好穿</p>
+              <p class="g-name">{{ goodDetails.name }}</p>
+              <p class="g-desc">{{ goodDetails.desc }}</p>
               <p class="g-price">
-                <span>200</span>
-                <span> 100</span>
+                <span>{{ goodDetails.price }}</span>
+                <span>{{ goodDetails.oldPrice }}</span>
               </p>
               <div class="g-service">
                 <dl>
@@ -87,17 +87,23 @@
                 <div class="goods-detail">
                   <!-- 属性 -->
                   <ul class="attrs">
-                    <li v-for="item in 3" :key="item.value">
-                      <span class="dt">白色</span>
-                      <span class="dd">纯棉</span>
+                    <li v-for="property in goodDetails.details.properties" :key="property.value">
+                      <span class="dt">{{ property.name }}</span>
+                      <span class="dd">{{ property.value }}</span>
                     </li>
                   </ul>
                   <!-- 图片 -->
+                  <img v-for="image in goodDetails.details.pictures" :key="image" :src="image" />
                 </div>
               </div>
             </div>
             <!-- 24热榜+专题推荐 -->
-            <div class="goods-aside"></div>
+            <div class="goods-aside">
+              <h3>24h热榜</h3>
+              <good-item v-for="good in hotDayList" :key="good.id" :good="good"> </good-item>
+              <h3>本周热榜</h3>
+              <good-item v-for="good in hotWeekList" :key="good.id" :good="good"> </good-item>
+            </div>
           </div>
         </div>
       </div>
@@ -106,11 +112,20 @@
 </template>
 
 <script setup lang="ts">
-import { getDetail } from '@/apis/detailApi';
-import type { GoodDetail } from '@/types/good';
+import { getDetail, getHotList } from '@/apis/detailApi';
+import type { Good, GoodDetail } from '@/types/good';
 import { onMounted, ref } from 'vue';
+import GoodItem from '../components/GoodItem.vue';
 
-const details = ref<GoodDetail>();
+enum HotType {
+  Day = 1,
+  Week = 2,
+}
+
+const goodDetails = ref<GoodDetail>();
+const hotDayList = ref<Array<Good>>();
+const hotWeekList = ref<Array<Good>>();
+
 const props = defineProps({
   id: {
     type: String,
@@ -121,11 +136,23 @@ const props = defineProps({
 async function getGoodDetail() {
   const res = await getDetail(props.id);
   console.log(`getGoodDetail res:`, res);
-  details.value = res.data.result;
+  goodDetails.value = res.data.result;
+}
+
+async function initHotList(limit?: number) {
+  const map = new Map();
+  map.set(HotType.Day, hotDayList);
+  map.set(HotType.Week, hotWeekList);
+  for (const [type, list] of map) {
+    const res = await getHotList(props.id, type, limit);
+    console.log(`getHotList type ${type} res:`, res);
+    list.value = res.data.result;
+  }
 }
 
 onMounted(() => {
   getGoodDetail();
+  initHotList(5);
 });
 </script>
 
@@ -160,6 +187,17 @@ onMounted(() => {
     .goods-aside {
       width: 280px;
       min-height: 1000px;
+
+      h3 {
+        height: 70px;
+        background: $helpColor;
+        color: #fff;
+        font-size: 18px;
+        line-height: 70px;
+        padding-left: 25px;
+        margin-bottom: 10px;
+        font-weight: normal;
+      }
     }
   }
 

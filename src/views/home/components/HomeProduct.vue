@@ -25,7 +25,7 @@ import { getProduct } from '@/apis/homeApi';
 import type { ProductCategory } from '@/types/product';
 import { onMounted, ref } from 'vue';
 import HomePanel from './HomePanel.vue';
-import GoodItem from './GoodItem.vue';
+import GoodItem from '../../components/GoodItem.vue';
 
 const productList = ref<Array<ProductCategory>>([]);
 const initProductList = async () => {

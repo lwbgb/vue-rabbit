@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import GoodItem from '../Home/components/GoodItem.vue';
+import GoodItem from '../components/GoodItem.vue';
 import { useCategory } from './composables/useCategory';
 import { useBanner } from './composables/useBanner';
 

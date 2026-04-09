@@ -37,7 +37,7 @@ import type { SubCategory } from '@/types/category';
 import type { Good } from '@/types/good';
 import type { PageResult } from '@/types/result';
 import { onMounted, ref } from 'vue';
-import GoodItem from '../Home/components/GoodItem.vue';
+import GoodItem from '../components/GoodItem.vue';
 import type { ScrollbarDirection } from 'element-plus';
 
 const props = defineProps({
