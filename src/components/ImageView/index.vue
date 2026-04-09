@@ -53,7 +53,7 @@ function onMouseInElement(event: MouseInElementType) {
   const { elementX, elementY, isOutside } = event;
   disabled.value = isOutside;
 
-  if (!pos.value) {
+  if (!pos.value || isOutside) {
     return;
   }
 
