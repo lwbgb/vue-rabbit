@@ -1,10 +1,10 @@
 <template>
   <div class="goods-image">
     <!-- 左侧大图-->
-    <div class="middle" ref="target">
-      <img :src="imageList[activeIndex]" alt="" />
+    <div class="middle" ref="target" v-mouse-in-element="onMouseInElement">
+      <img :src="imageList[activeIndex]" />
       <!-- 蒙层小滑块 -->
-      <div class="layer" :style="{ left: `0px`, top: `0px` }"></div>
+      <div class="layer" v-show="!disabled" :style="{ left: `${pos.left}px`, top: `${pos.top}px` }"></div>
     </div>
     <!-- 小图列表 -->
     <ul class="small">
@@ -19,18 +19,18 @@
     <!-- 放大镜大图 -->
     <div
       class="large"
-      :style="[
-        {
-          backgroundImage: `url(${imageList[activeIndex]})`,
-          backgroundPositionX: `0px`,
-          backgroundPositionY: `0px`,
-        },
-      ]"
-      v-show="false"></div>
+      :style="{
+        backgroundImage: `url(${imageList[activeIndex]})`,
+        backgroundPositionX: `${-pos.left * 2}px`,
+        backgroundPositionY: `${-pos.top * 2}px`,
+      }"
+      v-show="!disabled"></div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { MouseInElementType } from '@/types/vueUse';
+import { vMouseInElement } from '@vueuse/components';
 import { ref } from 'vue';
 
 const imageList = [
@@ -40,11 +40,37 @@ const imageList = [
   'https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg',
   'https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg',
 ];
-
 const activeIndex = ref(0);
+const pos = ref<{ left: number; top: number }>({ left: 0, top: 0 });
+const disabled = ref(true);
+const glassSize = { width: 200, height: 200 };
 
 function imageChangeHandler(index: number) {
   activeIndex.value = index;
+}
+
+function onMouseInElement(event: MouseInElementType) {
+  const { elementX, elementY, isOutside } = event;
+  disabled.value = isOutside;
+
+  if (!pos.value) {
+    return;
+  }
+
+  if (elementX < glassSize.width / 2) {
+    pos.value.left = 0;
+  } else if (elementX > 400 - glassSize.width / 2) {
+    pos.value.left = glassSize.width;
+  } else {
+    pos.value.left = elementX - glassSize.width / 2;
+  }
+  if (elementY < glassSize.height / 2) {
+    pos.value.top = 0;
+  } else if (elementY > 400 - glassSize.height / 2) {
+    pos.value.top = glassSize.height;
+  } else {
+    pos.value.top = elementY - glassSize.height / 2;
+  }
 }
 </script>
 
