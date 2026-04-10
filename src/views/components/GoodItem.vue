@@ -1,6 +1,6 @@
 <template>
-  <RouterLink to="/" class="goods-item">
-    <img v-img-lazy="good.picture" alt="" />
+  <RouterLink :to="destUrl" class="goods-item">
+    <img v-img-lazy="good.picture" :alt="good.title" />
     <p class="name ellipsis">{{ good.name }}</p>
     <p class="desc ellipsis">{{ good.desc }}</p>
     <p class="price">&yen;{{ good.price }}</p>
@@ -10,8 +10,9 @@
 <script setup lang="ts">
 import type { Good } from '@/types/good';
 
-const { good } = defineProps<{
+const { good, destUrl = '/' } = defineProps<{
   good: Good;
+  destUrl?: string;
 }>();
 </script>
 

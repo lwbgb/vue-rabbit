@@ -69,7 +69,7 @@
                 </dl>
               </div>
               <!-- sku组件 -->
-
+              <XtxSku :goods="goodDetails" @change="skuChangeHandler"/>
               <!-- 数据组件 -->
 
               <!-- 按钮组件 -->
@@ -117,7 +117,6 @@ import { getDetail, getHotList } from '@/apis/detailApi';
 import type { Good, GoodDetail } from '@/types/good';
 import { onMounted, ref } from 'vue';
 import GoodItem from '../components/GoodItem.vue';
-import ImageView from '@/components/ImageView/index.vue';
 
 enum HotType {
   Day = 1,
@@ -152,9 +151,13 @@ async function initHotList(limit?: number) {
   }
 }
 
+function skuChangeHandler(skuId: string) {
+  console.log(`skuChangeHandler skuId:`, skuId);
+}
+
 onMounted(() => {
   getGoodDetail();
-  initHotList(5);
+  initHotList(8);
 });
 </script>
 

@@ -17,7 +17,7 @@ interface property {
     value: string;
 }
 
-interface Sku {
+export interface Sku {
     id: number;
     skuCode: string;
     price: string;
