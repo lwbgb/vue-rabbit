@@ -26,8 +26,8 @@
               <el-form-item label="密码" prop="password">
                 <el-input v-model="ruleForm.password" type="password" />
               </el-form-item>
-              <el-form-item label-width="22px">
-                <el-checkbox size="large"> 我已同意隐私条款和服务条款 </el-checkbox>
+              <el-form-item label-width="22px" prop="agree">
+                <el-checkbox size="large" v-model="ruleForm.agree"> 我已同意隐私条款和服务条款 </el-checkbox>
               </el-form-item>
               <el-button size="large" class="subBtn">点击登录</el-button>
             </el-form>
@@ -54,18 +54,34 @@
 </template>
 
 <script setup lang="ts">
+import type { InternalRuleItem } from 'async-validator';
 import { reactive } from 'vue';
 
 const ruleForm = reactive({
   account: '',
   password: '',
+  agree: false,
 });
+
+const validateAgree = (rule: InternalRuleItem, value: boolean, callback: (error?: Error) => void) => {
+  if (!value) {
+    callback(new Error('请同意隐私条款和服务条款！'));
+  } else {
+    callback();
+  }
+};
 
 const rules = reactive({
   account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 14, message: '密码长度必须在6到14个字符之间', trigger: 'blur' },
+  ],
+  agree: [
+    {
+      validator: validateAgree,
+      trigger: 'change',
+    },
   ],
 });
 </script>
