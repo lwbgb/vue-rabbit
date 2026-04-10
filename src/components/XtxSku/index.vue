@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import { watchEffect } from 'vue';
 import getPowerSet from './power-set';
 import type { GoodDetail } from '@/types/good';

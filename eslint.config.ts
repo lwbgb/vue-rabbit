@@ -46,6 +46,7 @@ export default defineConfigWithVueTs(
                     reportUsedIgnorePattern: false,
                 },
             ],
+            
 
             // 组件命名需要多个单词
             'vue/multi-word-component-names': [
