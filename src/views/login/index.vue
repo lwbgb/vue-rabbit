@@ -19,7 +19,7 @@
         </nav>
         <div class="account-box">
           <div class="form">
-            <el-form label-position="right" label-width="60px" status-icon :model="ruleForm" :rules="rules">
+            <el-form ref="loginFormRef" label-width="60px" status-icon :model="ruleForm" :rules="rules">
               <el-form-item label="账户" prop="account">
                 <el-input v-model="ruleForm.account" />
               </el-form-item>
@@ -29,7 +29,7 @@
               <el-form-item label-width="22px" prop="agree">
                 <el-checkbox size="large" v-model="ruleForm.agree"> 我已同意隐私条款和服务条款 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="submitForm">点击登录</el-button>
             </el-form>
           </div>
         </div>
@@ -55,13 +55,15 @@
 
 <script setup lang="ts">
 import type { InternalRuleItem } from 'async-validator';
-import { reactive } from 'vue';
+import type { FormInstance } from 'element-plus';
+import { reactive, ref, useTemplateRef } from 'vue';
 
 const ruleForm = reactive({
   account: '',
   password: '',
   agree: false,
 });
+const loginFormRef = useTemplateRef<FormInstance>('loginFormRef');
 
 const validateAgree = (rule: InternalRuleItem, value: boolean, callback: (error?: Error) => void) => {
   if (!value) {
@@ -84,6 +86,29 @@ const rules = reactive({
     },
   ],
 });
+
+const submitForm = async () => {
+  if (!loginFormRef.value) return;
+
+  // 1. 使用 async/await
+  try {
+    // 等待全部校验结果
+    await loginFormRef.value.validate();
+    console.log('校验通过，准备发送请求登录！');
+  } catch (fields) {
+    console.log('校验失败的字段信息:', fields);
+  }
+
+  // 2. 使用回调函数 (Callback)
+  // loginFormRef.value.validate((valid, fields) => {
+  //   if (valid) {
+  //     console.log('所有校验全部通过！');
+  //     // 执行登录逻辑
+  //   } else {
+  //     console.log('校验未通过，错误字段:', fields);
+  //   }
+  // });
+};
 </script>
 
 <style scoped lang="scss">
