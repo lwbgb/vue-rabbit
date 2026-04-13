@@ -1,10 +1,12 @@
 import { login } from '@/apis/userApi';
 import type { LoginInfo } from '@/types/login';
+import { useStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
-    const loginInfo = ref<LoginInfo>();
+    // const loginInfo = ref<LoginInfo>();
+    const loginInfo = useStorage('user', null, localStorage);
 
     async function getLoginInfo(account: string, password: string) {
         const res = await login(account, password);
