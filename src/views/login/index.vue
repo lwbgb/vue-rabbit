@@ -54,9 +54,13 @@
 </template>
 
 <script setup lang="ts">
+import { login } from '@/apis/userApi';
+import type { LoginInfo } from '@/types/login';
 import type { InternalRuleItem } from 'async-validator';
-import type { FormInstance } from 'element-plus';
+import { ElMessage, type FormInstance } from 'element-plus';
 import { reactive, ref, useTemplateRef } from 'vue';
+import 'element-plus/theme-chalk/el-message.css';
+import { useRouter } from 'vue-router';
 
 const ruleForm = reactive({
   account: '',
@@ -64,6 +68,8 @@ const ruleForm = reactive({
   agree: false,
 });
 const loginFormRef = useTemplateRef<FormInstance>('loginFormRef');
+const loginInfo = ref<LoginInfo>();
+const router = useRouter();
 
 const validateAgree = (rule: InternalRuleItem, value: boolean, callback: (error?: Error) => void) => {
   if (!value) {
@@ -95,8 +101,17 @@ const submitForm = async () => {
     // 等待全部校验结果
     await loginFormRef.value.validate();
     console.log('校验通过，准备发送请求登录！');
-  } catch (fields) {
+
+    const res = await login(ruleForm.account, ruleForm.password);
+    // const res = await login('heima282', 'hm#qd@23!');
+    console.log('login, res:', res);
+    loginInfo.value = res.data.result;
+    ElMessage.success('登录成功！');
+    // 登录成功后跳转到首页
+    router.replace('/');
+  } catch (fields: any) {
     console.log('校验失败的字段信息:', fields);
+    // ElMessage.error('登录失败！请正确填写：' + Object.keys(fields).join(', '));
   }
 
   // 2. 使用回调函数 (Callback)

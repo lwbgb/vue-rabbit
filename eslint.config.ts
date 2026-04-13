@@ -46,7 +46,10 @@ export default defineConfigWithVueTs(
                     reportUsedIgnorePattern: false,
                 },
             ],
-            
+            '@typescript-eslint/no-explicit-any': [
+                'off'
+            ],
+
 
             // 组件命名需要多个单词
             'vue/multi-word-component-names': [
