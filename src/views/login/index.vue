@@ -54,13 +54,14 @@
 </template>
 
 <script setup lang="ts">
-import { login } from '@/apis/userApi';
 import type { LoginInfo } from '@/types/login';
 import type { InternalRuleItem } from 'async-validator';
 import { ElMessage, type FormInstance } from 'element-plus';
 import { reactive, ref, useTemplateRef } from 'vue';
 import 'element-plus/theme-chalk/el-message.css';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/userStore';
 
 const ruleForm = reactive({
   account: '',
@@ -68,7 +69,8 @@ const ruleForm = reactive({
   agree: false,
 });
 const loginFormRef = useTemplateRef<FormInstance>('loginFormRef');
-const loginInfo = ref<LoginInfo>();
+const { loginInfo } = storeToRefs(useUserStore());
+const { getLoginInfo } = useUserStore();
 const router = useRouter();
 
 const validateAgree = (rule: InternalRuleItem, value: boolean, callback: (error?: Error) => void) => {
@@ -101,11 +103,8 @@ const submitForm = async () => {
     // 等待全部校验结果
     await loginFormRef.value.validate();
     console.log('校验通过，准备发送请求登录！');
-
-    const res = await login(ruleForm.account, ruleForm.password);
-    // const res = await login('heima282', 'hm#qd@23!');
-    console.log('login, res:', res);
-    loginInfo.value = res.data.result;
+    // await getLoginInfo(ruleForm.account, ruleForm.password);
+    getLoginInfo('heima282', 'hm#qd@23!');
     ElMessage.success('登录成功！');
     // 登录成功后跳转到首页
     router.replace('/');
