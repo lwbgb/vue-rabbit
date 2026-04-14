@@ -14,5 +14,10 @@ export const useCartStore = defineStore('cart', () => {
         }
     }
 
-    return { cartList, addItem };
+    function deleteItemBySkuId(skuId: number) {
+        const index = cartList.value.findIndex(item => item.skuId == skuId);
+        cartList.value.splice(index, 1);
+    }
+
+    return { cartList, addItem, deleteItemBySkuId };
 });

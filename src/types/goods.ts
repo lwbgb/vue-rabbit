@@ -22,6 +22,7 @@ export interface Sku {
     skuId?: number;
     skuCode: string;
     price: string;
+    picture: string;
     oldPrice: string;
     inventory: number;
     specsText?: string;
