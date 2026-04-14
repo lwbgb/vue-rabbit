@@ -22,7 +22,7 @@
 // @ts-nocheck
 import { watchEffect } from 'vue';
 import getPowerSet from './power-set';
-import type { GoodDetail } from '@/types/good';
+import type { GoodDetail } from '@/types/goods';
 
 const spliter = '★';
 // 根据skus数据得到路径字典对象

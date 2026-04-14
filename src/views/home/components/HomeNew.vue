@@ -16,9 +16,9 @@
 import { onMounted, ref } from 'vue';
 import HomePanel from './HomePanel.vue';
 import { getNewGoods } from '@/apis/homeApi';
-import type { Good } from '@/types/good';
+import type { Goods } from '@/types/goods';
 
-const newList = ref<Array<Good>>([]);
+const newList = ref<Array<Goods>>([]);
 const initNewGoods = async () => {
   const res = await getNewGoods();
   console.log(`getNewGoods res:`, res);

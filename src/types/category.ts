@@ -1,5 +1,5 @@
 import type { Product } from './product';
-import type { Good } from './good';
+import type { Goods } from './goods';
 
 export interface CategoryInfo {
     id: number;
@@ -9,7 +9,7 @@ export interface CategoryInfo {
 }
 
 export interface HeaderCategory extends CategoryInfo {
-    goods: Array<Good>;
+    goods: Array<Goods>;
 }
 
 export interface SubCategory extends HeaderCategory {

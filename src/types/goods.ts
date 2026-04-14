@@ -1,7 +1,7 @@
 import type { Product } from './product';
 import type { Brand } from './brand';
 
-export interface Good {
+export interface Goods {
     id: number;
     name: string;
     price: string;
@@ -9,7 +9,7 @@ export interface Good {
     desc: string;
     picture: string;
     title: string;
-    alt: string;
+    alt?: string;
 }
 
 interface property {
@@ -18,11 +18,13 @@ interface property {
 }
 
 export interface Sku {
-    id: number;
+    id?: number;
+    skuId?: number;
     skuCode: string;
     price: string;
     oldPrice: string;
     inventory: number;
+    specsText?: string;
 }
 
 interface Spec {
@@ -35,7 +37,7 @@ interface Spec {
     }>;
 }
 
-export interface GoodDetail extends Good {
+export interface GoodDetail extends Goods {
     brand: Brand;
     categories: Array<Product>;
     collectCount: number;
@@ -46,7 +48,7 @@ export interface GoodDetail extends Good {
     };
     discount: number;
     evaluationInfo: string;
-    hotByDay: Array<Good>;
+    hotByDay: Array<Goods>;
     inventory: number;
     isCollect: string;
     isPreSale: boolean;
@@ -55,7 +57,7 @@ export interface GoodDetail extends Good {
     oldPrice: string;
     recommends: string;
     salesCount: number;
-    similarProducts: Array<Good>;
+    similarProducts: Array<Goods>;
     skus: Array<Sku>;
     specs: Array<Spec>;
     spuCode: string;

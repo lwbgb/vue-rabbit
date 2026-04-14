@@ -14,11 +14,11 @@
 
 <script setup lang="ts">
 import { getHotGoods } from '@/apis/homeApi';
-import type { Good } from '@/types/good';
+import type { Goods } from '@/types/goods';
 import { onMounted, ref } from 'vue';
 import HomePanel from './HomePanel.vue';
 
-const hotList = ref<Array<Good>>([]);
+const hotList = ref<Array<Goods>>([]);
 const initHotGoods = async () => {
   const res = await getHotGoods();
   console.log(`getHotGoods res:`, res);

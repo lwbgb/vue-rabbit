@@ -1,11 +1,11 @@
-import type { Good } from './good';
+import type { Goods } from './goods';
 
 export interface ProductCategory {
     id: number;
     name: string;
     picture: string;
     children: Array<Product>;
-    goods: Array<Good>;
+    goods: Array<Goods>;
     saleInfo: string;
 }
 

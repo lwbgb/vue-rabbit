@@ -8,10 +8,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Good } from '@/types/good';
+import type { Goods } from '@/types/goods';
 
 const { good, destUrl = '/' } = defineProps<{
-  good: Good;
+  good: Goods;
   destUrl?: string;
 }>();
 </script>

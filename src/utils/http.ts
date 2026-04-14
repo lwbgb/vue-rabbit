@@ -4,7 +4,6 @@ import { ElMessage } from 'element-plus';
 import 'element-plus/theme-chalk/el-message.css';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
 import router from '@/router';
 
 // 配置 Axios 实例

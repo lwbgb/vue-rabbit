@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { getCategoryFilterById, getSubCategoryInfo, type SubCategoryPageDTO } from '@/apis/categoryApi';
 import type { SubCategory } from '@/types/category';
-import type { Good } from '@/types/good';
+import type { Goods } from '@/types/goods';
 import type { PageResult } from '@/types/result';
 import { onMounted, ref } from 'vue';
 import GoodItem from '../components/GoodItem.vue';
@@ -54,8 +54,8 @@ const getSubCategories = async () => {
   subCategoryInfo.value = res.data.result;
 };
 
-const pageResult = ref<PageResult<Good>>();
-const itemList = ref<Array<Good>>([]);
+const pageResult = ref<PageResult<Goods>>();
+const itemList = ref<Array<Goods>>([]);
 const disabled = ref(false);
 const params = ref<SubCategoryPageDTO>({
   categoryId: +props.id,

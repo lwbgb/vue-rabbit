@@ -69,12 +69,12 @@
                 </dl>
               </div>
               <!-- sku组件 -->
-              <XtxSku :goods="goodDetails" @change="skuChangeHandler"/>
+              <XtxSku :goods="goodDetails" @change="skuChangeHandler" />
               <!-- 数据组件 -->
-
+              <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" />
               <!-- 按钮组件 -->
               <div>
-                <el-button size="large" class="btn"> 加入购物车 </el-button>
+                <el-button size="large" class="btn" @click="addToCart"> 加入购物车 </el-button>
               </div>
             </div>
           </div>
@@ -114,9 +114,12 @@
 
 <script setup lang="ts">
 import { getDetail, getHotList } from '@/apis/detailApi';
-import type { Good, GoodDetail } from '@/types/good';
+import type { Goods, GoodDetail, Sku } from '@/types/goods';
 import { onMounted, ref } from 'vue';
 import GoodItem from '../components/GoodItem.vue';
+import { ElMessage } from 'element-plus';
+import { useCartStore } from '@/stores/cartStore';
+import type { CartItem } from '@/types/cart';
 
 enum HotType {
   Day = 1,
@@ -124,8 +127,11 @@ enum HotType {
 }
 
 const goodDetails = ref<GoodDetail>();
-const hotDayList = ref<Array<Good>>();
-const hotWeekList = ref<Array<Good>>();
+const hotDayList = ref<Array<Goods>>();
+const hotWeekList = ref<Array<Goods>>();
+const num = ref(1);
+const sku = ref<Sku>();
+const cartStore = useCartStore();
 
 const props = defineProps({
   id: {
@@ -151,8 +157,32 @@ async function initHotList(limit?: number) {
   }
 }
 
-function skuChangeHandler(skuId: string) {
-  console.log(`skuChangeHandler skuId:`, skuId);
+function skuChangeHandler(value: Sku) {
+  console.log(`skuChangeHandler sku:`, value);
+  sku.value = value;
+}
+
+const handleChange = (value: number | undefined) => {
+  console.log(value);
+};
+
+function addToCart() {
+  if (sku.value?.skuId) {
+    ElMessage.success('成功加入购物车！');
+    const cartItem: CartItem = {
+      id: goodDetails.value!.id,
+      name: goodDetails.value!.name,
+      picture: goodDetails.value!.mainPictures[0]!,
+      price: goodDetails.value!.price,
+      count: num.value,
+      skuId: sku.value.skuId,
+      attrsText: sku.value.specsText!,
+      selected: true,
+    };
+    cartStore.addItem(cartItem);
+  } else {
+    ElMessage.warning('请选择商品规格！');
+  }
 }
 
 onMounted(() => {
