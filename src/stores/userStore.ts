@@ -18,5 +18,9 @@ export const useUserStore = defineStore('user', () => {
         loginInfo.value = res.data.result;
     }
 
-    return { loginInfo, getLoginInfo };
+    function removeUserInfo() {
+        loginInfo.value = null;
+    }
+
+    return { loginInfo, getLoginInfo, removeUserInfo };
 });

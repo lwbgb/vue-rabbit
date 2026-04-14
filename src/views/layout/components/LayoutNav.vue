@@ -7,7 +7,11 @@
             <a href="javascript:;"><i class="iconfont icon-user"></i>{{ loginInfo.account }}</a>
           </li>
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+            <el-popconfirm
+              title="确认退出吗?"
+              @confirm="onConfirm"
+              confirm-button-text="确认"
+              cancel-button-text="取消">
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>
@@ -29,9 +33,16 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
 const { loginInfo } = storeToRefs(userStore);
+const router = useRouter();
+
+function onConfirm() {
+  userStore.removeUserInfo();
+  router.push('/login');
+}
 </script>
 
 <style scoped lang="scss">
