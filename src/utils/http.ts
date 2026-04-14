@@ -4,6 +4,8 @@ import { ElMessage } from 'element-plus';
 import 'element-plus/theme-chalk/el-message.css';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
+import router from '@/router';
 
 // 配置 Axios 实例
 export const axiosInstance = axios.create({
@@ -38,7 +40,12 @@ axiosInstance.interceptors.response.use(
     function (error) {
         // 超出 2xx 范围的状态码都会触发该函数。
         // 对响应错误做点什么
-        ElMessage.warning(error.response?.data.msg);
+        ElMessage.warning(error.response?.data.message);
+        const userStore = useUserStore();
+        if (error.response?.status === 401) {
+            userStore.removeUserInfo();
+            router.push('/login');
+        }
         return Promise.reject(error);
     },
 );
