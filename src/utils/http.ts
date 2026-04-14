@@ -2,6 +2,8 @@ import axios from 'axios';
 import { AxiosConfig } from '@/constants/http.const';
 import { ElMessage } from 'element-plus';
 import 'element-plus/theme-chalk/el-message.css';
+import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
 
 // 配置 Axios 实例
 export const axiosInstance = axios.create({
@@ -12,7 +14,12 @@ export const axiosInstance = axios.create({
 // 添加请求拦截器
 axiosInstance.interceptors.request.use(
     function (config) {
-        // 在发送请求之前做些什么
+        // 每次发送请求前携带 token
+        const userStore = useUserStore();
+        const { loginInfo } = storeToRefs(userStore);
+        if (loginInfo && loginInfo.value.token) {
+            config.headers.Authorization = `Bearer ${loginInfo.value.token}`;
+        }
         return config;
     },
     function (error) {
