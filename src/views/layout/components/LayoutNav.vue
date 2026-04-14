@@ -2,9 +2,9 @@
   <nav class="app-topnav">
     <div class="container">
       <ul>
-        <template v-if="false">
+        <template v-if="loginInfo?.token">
           <li>
-            <a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a>
+            <a href="javascript:;"><i class="iconfont icon-user"></i>{{ loginInfo.account }}</a>
           </li>
           <li>
             <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
@@ -27,7 +27,11 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
 
+const userStore = useUserStore();
+const { loginInfo } = storeToRefs(userStore);
 </script>
 
 <style scoped lang="scss">

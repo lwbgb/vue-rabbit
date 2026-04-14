@@ -1,12 +1,16 @@
 import { login } from '@/apis/userApi';
 import type { LoginInfo } from '@/types/login';
-import { useStorage } from '@vueuse/core';
+import { StorageSerializers, useStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
     // const loginInfo = ref<LoginInfo>();
-    const loginInfo = useStorage('user', null, localStorage);
+
+    // 1. 使用 vueUse 将用户登录信息持久化到本地
+    const loginInfo = useStorage<LoginInfo>('user', null, localStorage, {
+        serializer: StorageSerializers.object,
+    });
 
     async function getLoginInfo(account: string, password: string) {
         const res = await login(account, password);

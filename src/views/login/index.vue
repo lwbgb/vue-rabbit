@@ -69,8 +69,8 @@ const ruleForm = reactive({
   agree: false,
 });
 const loginFormRef = useTemplateRef<FormInstance>('loginFormRef');
-const { loginInfo } = storeToRefs(useUserStore());
-const { getLoginInfo } = useUserStore();
+const userStore = useUserStore();
+const { loginInfo } = storeToRefs(userStore);
 const router = useRouter();
 
 const validateAgree = (rule: InternalRuleItem, value: boolean, callback: (error?: Error) => void) => {
@@ -80,6 +80,12 @@ const validateAgree = (rule: InternalRuleItem, value: boolean, callback: (error?
     callback();
   }
 };
+
+// 2. 监听 userStore 的变化，并将其持久化到 localStorage
+/* userStore.$subscribe((mutation, state) => {
+  // 每当状态发生变化时，将整个 state 持久化到本地存储。
+  localStorage.setItem('user', JSON.stringify(state));
+}); */
 
 const rules = reactive({
   account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
@@ -104,7 +110,7 @@ const submitForm = async () => {
     await loginFormRef.value.validate();
     console.log('校验通过，准备发送请求登录！');
     // await getLoginInfo(ruleForm.account, ruleForm.password);
-    getLoginInfo('heima282', 'hm#qd@23!');
+    userStore.getLoginInfo('heima282', 'hm#qd@23!');
     ElMessage.success('登录成功！');
     // 登录成功后跳转到首页
     router.replace('/');
