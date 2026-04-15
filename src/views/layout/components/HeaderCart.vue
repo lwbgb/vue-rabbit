@@ -24,7 +24,7 @@
       </div>
       <div class="foot">
         <div class="total">
-          <p>共 {{ cartList.length }} 件商品</p>
+          <p>共 {{ totalCount }} 件商品</p>
           <p>&yen; {{ totalPrice.toFixed(2) }}</p>
         </div>
         <el-button size="large" type="primary">去购物车结算</el-button>
@@ -36,18 +36,9 @@
 <script setup lang="ts">
 import { useCartStore } from '@/stores/cartStore';
 import { storeToRefs } from 'pinia';
-import { ref, watchEffect } from 'vue';
 
-const totalPrice = ref(0);
 const cartStore = useCartStore();
-const { cartList } = storeToRefs(cartStore);
-
-watchEffect(() => {
-  totalPrice.value = 0;
-  cartList.value.forEach(item => {
-    totalPrice.value += +item.price * item.count;
-  });
-});
+const { cartList, totalCount, totalPrice } = storeToRefs(cartStore);
 </script>
 
 <style scoped lang="scss">
