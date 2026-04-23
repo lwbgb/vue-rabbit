@@ -6,7 +6,7 @@
           <thead>
             <tr>
               <th width="120">
-                <el-checkbox />
+                <el-checkbox v-model="allSelected" @change="(event: boolean) => allCheckEvent(event)" />
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
@@ -19,7 +19,7 @@
           <tbody>
             <tr v-for="item in cartList" :key="item.id">
               <td>
-                <el-checkbox />
+                <el-checkbox v-model="item.selected" @change="singleCheckEvent($event, item)" />
               </td>
               <td>
                 <div class="goods">
@@ -69,8 +69,8 @@
       <!-- 操作栏 -->
       <div class="action">
         <div class="batch">
-          共 {{ totalCount }} 件商品，已选择 2 件，商品合计：
-          <span class="red">¥ {{ totalPrice.toFixed(2) }} </span>
+          共 {{ totalCount }} 件商品，已选择 {{ selectedCount }} 件，商品合计：
+          <span class="red">¥ {{ selectedPrice.toFixed(2) }} </span>
         </div>
         <div class="total">
           <el-button size="large" type="primary">下单结算</el-button>
@@ -82,11 +82,19 @@
 
 <script setup lang="ts">
 import { useCartStore } from '@/stores/cartStore';
+import type { CartItem } from '@/types/cart';
 import { storeToRefs } from 'pinia';
 
 const cartStore = useCartStore();
-const {cartList, totalCount, totalPrice} = storeToRefs(cartStore);
+const { cartList, totalCount, allSelected, selectedCount, selectedPrice } = storeToRefs(cartStore);
 
+function allCheckEvent(selected: boolean) {
+  selected ? cartStore.selectAllItem() : cartStore.excludeAllItem();
+}
+
+function singleCheckEvent(checked: boolean, item: CartItem) {
+  cartStore.setSelected(item, checked);
+}
 </script>
 
 <style scoped lang="scss">
