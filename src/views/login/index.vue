@@ -62,6 +62,7 @@ import 'element-plus/theme-chalk/el-message.css';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
+import { useCartStore } from '@/stores/cartStore';
 
 const ruleForm = reactive({
   account: '',
@@ -70,6 +71,7 @@ const ruleForm = reactive({
 });
 const loginFormRef = useTemplateRef<FormInstance>('loginFormRef');
 const userStore = useUserStore();
+const cartStore = useCartStore();
 const { loginInfo } = storeToRefs(userStore);
 const router = useRouter();
 
@@ -109,8 +111,9 @@ const submitForm = async () => {
     // 等待全部校验结果
     await loginFormRef.value.validate();
     console.log('校验通过，准备发送请求登录！');
-    // await getLoginInfo(ruleForm.account, ruleForm.password);
-    userStore.getLoginInfo('heima282', 'hm#qd@23!');
+    // await userStore.doLogin(ruleForm.account, ruleForm.password);
+    await userStore.doLogin('heima289', 'hm#qd@23!');
+    await cartStore.mergeCartList();
     ElMessage.success('登录成功！');
     // 登录成功后跳转到首页
     router.replace('/');

@@ -9,7 +9,7 @@
           <li>
             <el-popconfirm
               title="确认退出吗?"
-              @confirm="onConfirm"
+              @confirm="userStore.logout"
               confirm-button-text="确认"
               cancel-button-text="取消">
               <template #reference>
@@ -33,16 +33,9 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
 const { loginInfo } = storeToRefs(userStore);
-const router = useRouter();
-
-function onConfirm() {
-  userStore.removeUserInfo();
-  router.push('/login');
-}
 </script>
 
 <style scoped lang="scss">

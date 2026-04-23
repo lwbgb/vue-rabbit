@@ -172,7 +172,9 @@ function addToCart() {
     const cartItem: CartItem = {
       id: goodDetails.value!.id,
       name: goodDetails.value!.name,
-      picture: goodDetails.value?.skus.find(item => item.id === sku.value?.skuId)?.picture!,
+      picture:
+        goodDetails.value?.skus.find(item => item.id === sku.value?.skuId)?.picture! ??
+        goodDetails.value?.mainPictures[0],
       price: goodDetails.value!.price,
       count: num.value,
       skuId: sku.value.skuId,

@@ -4,7 +4,7 @@ import type { Brand } from './brand';
 export interface Goods {
     id: number;
     name: string;
-    price: string;
+    price: number;
     orderNum: number;
     desc: string;
     picture: string;
@@ -21,9 +21,9 @@ export interface Sku {
     id?: number;
     skuId?: number;
     skuCode: string;
-    price: string;
+    price: number;
     picture: string;
-    oldPrice: string;
+    oldPrice: number;
     inventory: number;
     specsText?: string;
 }
@@ -55,7 +55,7 @@ export interface GoodDetail extends Goods {
     isPreSale: boolean;
     mainPictures: Array<string>;
     mainVideos: Array<string>;
-    oldPrice: string;
+    oldPrice: number;
     recommends: string;
     salesCount: number;
     similarProducts: Array<Goods>;

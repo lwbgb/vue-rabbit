@@ -1,9 +1,14 @@
 import type { CartItem } from '@/types/cart';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import { useUserStore } from './userStore';
+import { deleteItemBySkuIds, getCartList, insertItem, mergeCart } from '@/apis/cartApi';
+import { ElMessage } from 'element-plus';
 
 export const useCartStore = defineStore('cart', () => {
     const cartList = ref<Array<CartItem>>([]);
+
+    const userStore = useUserStore();
 
     const totalCount = computed(() => cartList.value.reduce((sum, item) => sum + item.count, 0));
 
@@ -19,18 +24,57 @@ export const useCartStore = defineStore('cart', () => {
         cartList.value.reduce((sum, item) => (item.selected ? sum + item.price * item.count : sum), 0),
     );
 
-    function addItem(cartItem: CartItem) {
-        const item = cartList.value.find(item => item.skuId === cartItem.skuId);
-        if (item) {
-            item.count++;
+    async function initCartList() {
+        if (userStore.isLogin) {
+            await updateCartList();
         } else {
-            cartList.value.push(cartItem);
+            ElMessage.warning('请先登录账号！');
         }
     }
 
-    function deleteItemBySkuId(skuId: number) {
-        const index = cartList.value.findIndex(item => item.skuId == skuId);
-        cartList.value.splice(index, 1);
+    async function addItem(cartItem: CartItem) {
+        if (userStore.isLogin) {
+            await insertItem(cartItem.skuId, cartItem.count);
+            await updateCartList();
+        } else {
+            const item = cartList.value.find(item => item.skuId === cartItem.skuId);
+            if (item) {
+                item.count++;
+            } else {
+                cartList.value.push(cartItem);
+            }
+        }
+    }
+
+    async function deleteItemBySkuId(skuId: number) {
+        if (userStore.isLogin) {
+            await deleteItemBySkuIds([skuId]);
+            await updateCartList();
+        } else {
+            const index = cartList.value.findIndex(item => item.skuId == skuId);
+            cartList.value.splice(index, 1);
+        }
+    }
+
+    async function updateCartList() {
+        const res = await getCartList();
+        console.log(`getCartList, res:`, res);
+        cartList.value = res.data.result;
+    }
+
+    async function mergeCartList() {
+        await mergeCart(
+            cartList.value.map(item => ({
+                skuId: item.skuId,
+                selected: item.selected,
+                count: item.count,
+            })),
+        );
+        await updateCartList();
+    }
+
+    function clearCartList() {
+        cartList.value = [];
     }
 
     function setSelected(cartItem: CartItem, selected: boolean) {
@@ -52,8 +96,12 @@ export const useCartStore = defineStore('cart', () => {
         selectedCount,
         totalPrice,
         selectedPrice,
+        initCartList,
         addItem,
         deleteItemBySkuId,
+        updateCartList,
+        mergeCartList,
+        clearCartList,
         setSelected,
         selectAllItem,
         excludeAllItem,

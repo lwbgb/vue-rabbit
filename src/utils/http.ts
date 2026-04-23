@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
         ElMessage.warning(error.response?.data.message);
         const userStore = useUserStore();
         if (error.response?.status === 401) {
-            userStore.removeUserInfo();
+            userStore.logout();
             router.push('/login');
         }
         return Promise.reject(error);

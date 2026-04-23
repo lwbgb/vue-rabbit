@@ -8,3 +8,9 @@ export interface CartItem {
     attrsText: string;
     selected: boolean;
 }
+
+export interface CartItemVO {
+    skuId: number;
+    count: number;
+    selected: boolean;
+}

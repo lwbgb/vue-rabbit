@@ -16,12 +16,15 @@ import LayoutFooter from './components/LayoutFooter.vue';
 import LayoutHeader from './components/LayoutHeader.vue';
 import LayoutNav from './components/LayoutNav.vue';
 import { onMounted } from 'vue';
+import { useCartStore } from '@/stores/cartStore';
 
 const categoryStore = useCategoryStore();
+const cartStore = useCartStore();
 const { initCategory } = categoryStore;
 
 onMounted(() => {
   initCategory();
+  cartStore.initCartList();
 });
 </script>
 
