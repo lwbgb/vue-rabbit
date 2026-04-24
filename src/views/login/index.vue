@@ -54,7 +54,6 @@
 </template>
 
 <script setup lang="ts">
-import type { LoginInfo } from '@/types/login';
 import type { InternalRuleItem } from 'async-validator';
 import { ElMessage, type FormInstance } from 'element-plus';
 import { reactive, ref, useTemplateRef } from 'vue';
@@ -113,7 +112,6 @@ const submitForm = async () => {
     console.log('校验通过，准备发送请求登录！');
     // await userStore.doLogin(ruleForm.account, ruleForm.password);
     await userStore.doLogin('heima289', 'hm#qd@23!');
-    await cartStore.mergeCartList();
     ElMessage.success('登录成功！');
     // 登录成功后跳转到首页
     router.replace('/');

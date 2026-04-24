@@ -21,6 +21,8 @@ export const useUserStore = defineStore('user', () => {
         const res = await login(account, password);
         console.log('login, res:', res);
         loginInfo.value = res.data.result;
+        // 将本地的购物车合并到线上
+        await cartStore.mergeCartList();
     }
 
     function logout() {
