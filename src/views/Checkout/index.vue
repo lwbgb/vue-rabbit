@@ -34,20 +34,20 @@
               </tr>
             </thead>
             <tbody v-if="checkoutInfo">
-              <tr v-for="i in checkoutInfo.goods" :key="i.id">
+              <tr v-for="good in checkoutInfo.goods" :key="good.id">
                 <td>
                   <a href="javascript:;" class="info">
-                    <img :src="i.picture" alt="">
+                    <img :src="good.picture" :alt="good.name">
                     <div class="right">
-                      <p>{{ i.name }}</p>
-                      <p>{{ i.attrsText }}</p>
+                      <p>{{ good.name }}</p>
+                      <p>{{ good.attrsText }}</p>
                     </div>
                   </a>
                 </td>
-                <td>&yen;{{ i.price }}</td>
-                <td>{{ i.price }}</td>
-                <td>&yen;{{ i.totalPrice }}</td>
-                <td>&yen;{{ i.totalPayPrice }}</td>
+                <td>&yen;{{ good.price }}</td>
+                <td>{{ good.price }}</td>
+                <td>&yen;{{ good.totalPrice }}</td>
+                <td>&yen;{{ good.totalPayPrice }}</td>
               </tr>
             </tbody>
           </table>
@@ -96,22 +96,55 @@
     </div>
   </div>
   <!-- 切换地址 -->
+  <el-dialog title="切换收货地址" width="30%" center v-model="toggleFlag">
+    <div class="addressWrapper" v-if="checkoutInfo">
+      <div class="text item" v-for="address in checkoutInfo.userAddresses" :key="address.id"
+        :class="{ active: activeAddress?.id === address.id }" @click="changeAddressEvent(address)">
+        <ul>
+          <li><span>收<i />货<i />人：</span>{{ address.receiver }} </li>
+          <li><span>联系方式：</span>{{ address.contact }}</li>
+          <li><span>收货地址：</span>{{ address.fullLocation + address.address }}</li>
+        </ul>
+      </div>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button>取消</el-button>
+        <el-button type="primary" @click="confirm">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
   <!-- 添加地址 -->
+  
 </template>
 
 <script setup lang="ts">
 import { getCheckoutInfo } from '@/apis/checkout';
-import type { CheckoutInfo } from '@/types/checkout';
+import type { Address, CheckoutInfo } from '@/types/checkout';
 import { onMounted, ref } from 'vue';
 
 const checkoutInfo = ref<CheckoutInfo>(); // 订单对象
-const { goods, summary, userAddresses } = ${ checkoutInfo };
-const curAddress = {}; // 地址对象
+const curAddress = ref<Address>(); // 默认地址
+const toggleFlag = ref<boolean>(false);
+const addFlag = ref<boolean>(false);
+const activeAddress = ref<Address>();
 
 async function initCheckoutInfo() {
   const res = await getCheckoutInfo();
   console.log(`getCheckoutInfo, res:`, res);
   checkoutInfo.value = res.data.result;
+  curAddress.value = checkoutInfo.value?.userAddresses.find(address => address.isDefault === 0);
+}
+
+function changeAddressEvent(address: Address) {
+  activeAddress.value = address;
+}
+
+function confirm() {
+  curAddress.value = activeAddress.value;
+  toggleFlag.value = false;
+  activeAddress.value = undefined;
 }
 
 onMounted(() => {
