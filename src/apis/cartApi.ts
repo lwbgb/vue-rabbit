@@ -1,4 +1,4 @@
-import type { CartItemVO } from '@/types/cart';
+import type { CartItemDTO } from '@/types/cart';
 import { axiosInstance } from '@/utils/http';
 
 export function getCartList() {
@@ -26,10 +26,10 @@ export function deleteItemBySkuIds(skuIds: Array<number>) {
     });
 }
 
-export function mergeCart(cartItemVOs: Array<CartItemVO>) {
+export function mergeCart(CartItemDTOs: Array<CartItemDTO>) {
     return axiosInstance({
         url: '/member/cart/merge',
         method: 'POST',
-        data: cartItemVOs,
+        data: CartItemDTOs,
     });
 }

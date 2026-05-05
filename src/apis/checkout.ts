@@ -1,3 +1,4 @@
+import type { OrderDTO } from '@/types/order';
 import { axiosInstance } from '@/utils/http';
 
 export function getCheckoutInfo() {
@@ -5,3 +6,11 @@ export function getCheckoutInfo() {
         url: '/member/order/pre',
     });
 }
+
+export function createOrder(oderDTO: OrderDTO) {
+    return axiosInstance({
+        url: '/member/order',
+        method: 'POST',
+        data: oderDTO,
+    });
+};

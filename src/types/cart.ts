@@ -9,7 +9,7 @@ export interface CartItem {
     selected: boolean;
 }
 
-export interface CartItemVO {
+export interface CartItemDTO {
     skuId: number;
     count: number;
     selected: boolean;

@@ -90,7 +90,7 @@
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <el-button type="primary" size="large">提交订单</el-button>
+          <el-button type="primary" size="large" @click="submitOrder">提交订单</el-button>
         </div>
       </div>
     </div>
@@ -109,32 +109,58 @@
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button>取消</el-button>
+        <el-button @click="toggleFlag = false">取消</el-button>
         <el-button type="primary" @click="confirm">确定</el-button>
       </span>
     </template>
   </el-dialog>
 
   <!-- 添加地址 -->
-  
+
+
 </template>
 
 <script setup lang="ts">
-import { getCheckoutInfo } from '@/apis/checkout';
+import { createOrder, getCheckoutInfo } from '@/apis/checkout';
+import { useCartStore } from '@/stores/cartStore';
 import type { Address, CheckoutInfo } from '@/types/checkout';
+import type { Order, OrderDTO } from '@/types/order';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const checkoutInfo = ref<CheckoutInfo>(); // 订单对象
 const curAddress = ref<Address>(); // 默认地址
 const toggleFlag = ref<boolean>(false);
 const addFlag = ref<boolean>(false);
 const activeAddress = ref<Address>();
+const oderInfo = ref<Order>();
+const router = useRouter();
+const cartStore = useCartStore();
 
 async function initCheckoutInfo() {
   const res = await getCheckoutInfo();
   console.log(`getCheckoutInfo, res:`, res);
   checkoutInfo.value = res.data.result;
   curAddress.value = checkoutInfo.value?.userAddresses.find(address => address.isDefault === 0);
+}
+
+async function submitOrder() {
+  const orderDTO = {
+    addressId: curAddress.value?.id,
+    buyerMessage: '',
+    deliveryTimeType: 1,
+    goods: checkoutInfo.value?.goods,
+    payChannel: 1,
+    payType: 1,
+  } as OrderDTO;
+  const res = await createOrder(orderDTO);
+  console.log(`getOrderInfo, res:`, res);
+  oderInfo.value = res.data.result;
+  router.push({
+    path: '/pay',
+    query: { id: oderInfo.value?.id }
+  });
+  cartStore.updateCartList();
 }
 
 function changeAddressEvent(address: Address) {
@@ -153,6 +179,8 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+@use "sass:color";
+
 .xtx-pay-checkout-page {
   margin-top: 20px;
 
@@ -354,7 +382,7 @@ onMounted(() => {
     &.active,
     &:hover {
       border-color: $xtxColor;
-      background: lighten($xtxColor, 50%);
+      background: color.adjust($xtxColor, $lightness: 50%);
     }
 
     >ul {
