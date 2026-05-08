@@ -23,4 +23,18 @@ export interface Order {
     skus: Array<Sku>;
     totalMoney: number;
     totalNum: number;
+    arrivalEstimatedTime: string;
+    cityCode: string;
+    closeTime: string;
+    consignTime: null;
+    countyCode: string;
+    deliveryTimeType: number;
+    endTime: string;
+    evaluationTime: string;
+    payState: number;
+    payTime: string;
+    provinceCode: string;
+    receiverAddress: string;
+    receiverContact: string;
+    receiverMobile: string;
 }

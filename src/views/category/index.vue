@@ -34,7 +34,7 @@
           <h3>- {{ item.name }}-</h3>
         </div>
         <div class="body">
-          <GoodItem v-for="good in item.goods" :key="good.id" :good="good" />
+          <GoodItem v-for="good in item.goods" :key="good.id" :good="good" :dest-url="`/detail/${good.id}`" />
         </div>
       </div>
     </div>

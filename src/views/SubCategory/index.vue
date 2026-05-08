@@ -4,8 +4,7 @@
     <div class="bread-container">
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/category/${subCategoryInfo?.parentId}` }"
-          >{{ subCategoryInfo?.parentName }}
+        <el-breadcrumb-item :to="{ path: `/category/${subCategoryInfo?.parentId}` }">{{ subCategoryInfo?.parentName }}
         </el-breadcrumb-item>
         <el-breadcrumb-item>{{ subCategoryInfo?.name }}</el-breadcrumb-item>
       </el-breadcrumb>
@@ -25,7 +24,7 @@
 
       <!-- 2. el-scrollbar 实现无限滚动 -->
       <el-scrollbar @end-reached="loadMore" noresize="true" view-class="body" distance="80">
-        <good-item v-for="good in itemList" :key="good.id" :good="good"></good-item>
+        <good-item v-for="good in itemList" :key="good.id" :good="good" :dest-url="`/detail/${good.id}`"></good-item>
       </el-scrollbar>
     </div>
   </div>
@@ -40,12 +39,9 @@ import { onMounted, ref } from 'vue';
 import GoodItem from '../components/GoodItem.vue';
 import type { ScrollbarDirection } from 'element-plus';
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-});
+const props = defineProps<{
+  id: string
+}>();
 
 const subCategoryInfo = ref<SubCategory>();
 const getSubCategories = async () => {

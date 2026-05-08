@@ -12,7 +12,7 @@
         </RouterLink>
         <ul class="goods-list">
           <li v-for="good in cate.goods" :key="good.id">
-            <GoodItem :good="good" />
+            <GoodItem :good="good" :dest-url="`/detail/${good.id}`"/>
           </li>
         </ul>
       </div>

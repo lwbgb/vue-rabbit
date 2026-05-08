@@ -121,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { createOrder, getCheckoutInfo } from '@/apis/checkout';
+import { createOrder, getCheckoutInfo } from '@/apis/checkoutApi';
 import { useCartStore } from '@/stores/cartStore';
 import type { Address, CheckoutInfo } from '@/types/checkout';
 import type { Order, OrderDTO } from '@/types/order';

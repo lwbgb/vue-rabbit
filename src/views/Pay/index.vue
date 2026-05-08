@@ -6,11 +6,12 @@
         <span class="icon iconfont icon-queren2"></span>
         <div class="tip">
           <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>24分30秒</span>, 超时后将取消订单</p>
+          <p>支付还剩 <span>{{ dayjs.unix(remaining).format('mm分ss秒') }}</span>, 超时后将取消订单
+          </p>
         </div>
-        <div class="amount">
+        <div class="amount" v-if="orderInfo">
           <span>应付总额：</span>
-          <span>¥{{ payInfo.payMoney?.toFixed(2) }}</span>
+          <span>¥{{ orderInfo.payMoney?.toFixed(2) }}</span>
         </div>
       </div>
       <!-- 付款方式 -->
@@ -19,7 +20,8 @@
         <div class="item">
           <p>支付平台</p>
           <a class="btn wx" href="javascript:;"></a>
-          <a class="btn alipay" :href="payUrl"></a>
+          <a class="btn alipay"
+            :href="`${PayMethod.BASE_URL}pay/aliPay?orderId=${route.query.id}&redirect=${PayMethod.CALL_BACK_URL}`"></a>
         </div>
         <div class="item">
           <p>支付方式</p>
@@ -35,8 +37,20 @@
 </template>
 
 <script setup lang="ts">
+import { PayMethod } from '@/constants/pay.const';
+import { useOrderStore } from '@/stores/orderStore';
+import { dayjs } from 'element-plus';
+import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 
-const payInfo = {};
+const route = useRoute();
+const orderStore = useOrderStore();
+const { orderInfo, remaining } = storeToRefs(orderStore);
+
+onMounted(async () => {
+  await orderStore.updateOrderInfo(String(route.query.id));
+});
 </script>
 
 <style scoped lang="scss">
