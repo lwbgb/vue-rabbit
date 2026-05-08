@@ -116,7 +116,7 @@
 import { getDetail, getHotList } from '@/apis/detailApi';
 import type { Goods, GoodDetail, Sku } from '@/types/goods';
 import { onMounted, ref } from 'vue';
-import GoodItem from '../components/GoodItem.vue';
+import GoodItem from '../components/GoodsItem.vue';
 import { ElMessage } from 'element-plus';
 import { useCartStore } from '@/stores/cartStore';
 import type { CartItem } from '@/types/cart';

@@ -10,3 +10,10 @@ export function login(account: string, password: string) {
         },
     });
 }
+
+export function getLikeList(limit: number) {
+    return axiosInstance({
+        url: '/goods/relevant',
+        params: { limit },
+    });
+}
