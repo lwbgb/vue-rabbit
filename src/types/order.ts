@@ -1,5 +1,5 @@
-import type { CheckoutItem } from "./checkout";
-import type { Sku } from "./goods";
+import type { CheckoutItem } from './checkout';
+import type { Sku } from './goods';
 
 export interface OrderDTO {
     addressId: number;
@@ -8,6 +8,12 @@ export interface OrderDTO {
     goods: Array<CheckoutItem>;
     payChannel: number;
     payType: number;
+}
+
+export interface OrderPageDTO {
+    orderState: number;
+    page: number;
+    pageSize: number;
 }
 
 export interface Order {
@@ -20,7 +26,7 @@ export interface Order {
     payMoney: number;
     payType: number;
     postFee: number;
-    skus: Array<Sku>;
+    skus: Array<OrderItemSku>;
     totalMoney: number;
     totalNum: number;
     arrivalEstimatedTime: string;
@@ -37,4 +43,30 @@ export interface Order {
     receiverAddress: string;
     receiverContact: string;
     receiverMobile: string;
+}
+
+interface property {
+    propertyMainName: string;
+    propertyValueName: string;
+}
+
+interface OrderItemSku {
+    id: number;
+    name: string;
+    quantity: number;
+    curPrice: number;
+    image: string;
+    spuId: number;
+    attrsText: string;
+    realPay: number;
+    totalMoney: number;
+    properties: Array<property>;
+}
+
+export interface UserOrder {
+    count: number;
+    page: number;
+    pageSize: number;
+    pages: number;
+    items: Array<Order>;
 }

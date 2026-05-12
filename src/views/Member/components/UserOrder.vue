@@ -5,19 +5,19 @@
       <el-tab-pane v-for="item in tabTypes" :key="item.name" :label="item.label" />
 
       <div class="main-container">
-        <div class="holder-container" v-if="orderList.length === 0">
+        <div class="holder-container" v-if="orderList && orderList.items.length === 0">
           <el-empty description="暂无订单数据" />
         </div>
         <div v-else>
           <!-- 订单列表 -->
-          <div class="order-item" v-for="order in orderList" :key="order.id">
+          <div class="order-item" v-for="order in orderList?.items" :key="order.id">
             <div class="head">
               <span>下单时间：{{ order.createTime }}</span>
               <span>订单编号：{{ order.id }}</span>
               <!-- 未付款，倒计时时间还有 -->
               <span class="down-time" v-if="order.orderState === 1">
                 <i class="iconfont icon-down-time"></i>
-                <b>付款截止: {{ order.countdown }}</b>
+                <b>付款截止: {{ dayjs.unix(Math.max(0, order.countdown)).format('mm分ss秒') }}</b>
               </span>
             </div>
             <div class="body">
@@ -64,7 +64,7 @@
                 <el-button v-if="order.orderState === 3" type="primary" size="small">
                   确认收货
                 </el-button>
-                <p><a href="javascript:;">查看详情</a></p>
+                <p><a href="javascript:;" @click="$router.push({ path: '/pay', query: { id: order.id } })">查看详情</a></p>
                 <p v-if="[2, 3, 4, 5].includes(order.orderState)">
                   <a href="javascript:;">再次购买</a>
                 </p>
@@ -76,9 +76,9 @@
             </div>
           </div>
           <!-- 分页 -->
-          <div class="pagination-container">
+          <!-- <div class="pagination-container">
             <el-pagination background layout="prev, pager, next" />
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -87,6 +87,11 @@
 </template>
 
 <script setup lang="ts">
+import { getUserOrder } from '@/apis/orderApi';
+import type { OrderPageDTO, UserOrder } from '@/types/order';
+import { dayjs } from 'element-plus';
+import { onMounted, ref } from 'vue';
+
 // tab列表
 const tabTypes = [
   { name: "all", label: "全部订单" },
@@ -98,7 +103,18 @@ const tabTypes = [
   { name: "cancel", label: "已取消" }
 ];
 // 订单列表
-const orderList: any = [];
+const orderList = ref<UserOrder>();
+const orderPageDTO = ref<OrderPageDTO>();
+
+async function initUserOrder() {
+  const res = await getUserOrder(orderPageDTO.value);
+  console.log('getUserOrder, res: ', res);
+  orderList.value = res.data.result;
+}
+
+onMounted(() => {
+  initUserOrder();
+});
 </script>
 
 <style scoped lang="scss">

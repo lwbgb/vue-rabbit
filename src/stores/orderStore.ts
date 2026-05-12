@@ -12,11 +12,7 @@ export const useOrderStore = defineStore('order', () => {
         onTick() {},
     });
 
-    watch(
-        countdown,
-        newValue => newValue > 0 ? start() : stop(),
-        { once: true },
-    );
+    watch(countdown, newValue => (newValue > 0 ? start() : stop()));
 
     async function updateOrderInfo(id: string) {
         const res = await getOrderInfo(id);

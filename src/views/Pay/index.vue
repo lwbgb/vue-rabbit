@@ -6,7 +6,7 @@
         <span class="icon iconfont icon-queren2"></span>
         <div class="tip">
           <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>{{ dayjs.unix(remaining).format('mm分ss秒') }}</span>, 超时后将取消订单
+          <p>支付还剩<span>{{ dayjs.unix(Math.max(0, remaining)).format('mm分ss秒') }}</span>, 超时后将取消订单
           </p>
         </div>
         <div class="amount" v-if="orderInfo">
@@ -41,14 +41,14 @@ import { PayMethod } from '@/constants/pay.const';
 import { useOrderStore } from '@/stores/orderStore';
 import { dayjs } from 'element-plus';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const orderStore = useOrderStore();
 const { orderInfo, remaining } = storeToRefs(orderStore);
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await orderStore.updateOrderInfo(String(route.query.id));
 });
 </script>
