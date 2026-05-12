@@ -1,6 +1,6 @@
 <template>
   <div class="order-container">
-    <el-tabs>
+    <el-tabs @tab-change="tabChangeEvent">
       <!-- tab切换 -->
       <el-tab-pane v-for="item in tabTypes" :key="item.name" :label="item.label" />
 
@@ -104,12 +104,23 @@ const tabTypes = [
 ];
 // 订单列表
 const orderList = ref<UserOrder>();
-const orderPageDTO = ref<OrderPageDTO>();
+const orderPageDTO = ref<OrderPageDTO>({
+  orderState: 0,
+  page: 1,
+  pageSize: 2,
+});
 
 async function initUserOrder() {
   const res = await getUserOrder(orderPageDTO.value);
   console.log('getUserOrder, res: ', res);
   orderList.value = res.data.result;
+}
+
+function tabChangeEvent(type: number) {
+  if (orderPageDTO.value) {
+    orderPageDTO.value.orderState = type;
+    initUserOrder();
+  }
 }
 
 onMounted(() => {
