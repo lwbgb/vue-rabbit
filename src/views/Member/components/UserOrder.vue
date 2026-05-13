@@ -41,7 +41,7 @@
                 </ul>
               </div>
               <div class="column state">
-                <p>{{ order.orderState }}</p>
+                <p>{{ orderStatusMap[order.orderState as OrderStatus] }}</p>
                 <p v-if="order.orderState === 3">
                   <a href="javascript:;" class="green">查看物流</a>
                 </p>
@@ -58,13 +58,11 @@
                 <p>在线支付</p>
               </div>
               <div class="column action">
-                <el-button v-if="order.orderState === 1" type="primary" size="small">
-                  立即付款
-                </el-button>
-                <el-button v-if="order.orderState === 3" type="primary" size="small">
-                  确认收货
-                </el-button>
-                <p><a href="javascript:;" @click="$router.push({ path: '/pay', query: { id: order.id } })">查看详情</a></p>
+                <el-button v-if="order.orderState === 1" type="primary" size="small"> 立即付款 </el-button>
+                <el-button v-if="order.orderState === 3" type="primary" size="small"> 确认收货 </el-button>
+                <p>
+                  <a href="javascript:;" @click="$router.push({ path: '/pay', query: { id: order.id } })">查看详情</a>
+                </p>
                 <p v-if="[2, 3, 4, 5].includes(order.orderState)">
                   <a href="javascript:;">再次购买</a>
                 </p>
@@ -76,33 +74,50 @@
             </div>
           </div>
           <!-- 分页 -->
-          <!-- <div class="pagination-container">
-            <el-pagination background layout="prev, pager, next" />
-          </div> -->
+          <div class="pagination-container">
+            <el-pagination
+              background
+              hide-on-single-page
+              layout="sizes, prev, pager, next"
+              :page-sizes="[2, 5, 10, 20]"
+              :total="orderList?.counts ?? 0"
+              v-model:page-size="orderPageDTO.pageSize"
+              v-model:current-page="orderPageDTO.page"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange" />
+          </div>
         </div>
       </div>
-
     </el-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
 import { getUserOrder } from '@/apis/orderApi';
+import { OrderStatus } from '@/enums/orderStatus.enum';
 import type { OrderPageDTO, UserOrder } from '@/types/order';
 import { dayjs } from 'element-plus';
 import { onMounted, ref } from 'vue';
 
 // tab列表
 const tabTypes = [
-  { name: "all", label: "全部订单" },
-  { name: "unpay", label: "待付款" },
-  { name: "deliver", label: "待发货" },
-  { name: "receive", label: "待收货" },
-  { name: "comment", label: "待评价" },
-  { name: "complete", label: "已完成" },
-  { name: "cancel", label: "已取消" }
+  { name: 'all', label: '全部订单' },
+  { name: 'unpay', label: '待付款' },
+  { name: 'deliver', label: '待发货' },
+  { name: 'receive', label: '待收货' },
+  { name: 'comment', label: '待评价' },
+  { name: 'complete', label: '已完成' },
+  { name: 'cancel', label: '已取消' },
 ];
-// 订单列表
+const orderStatusMap: Record<OrderStatus, string> = {
+  [OrderStatus.PENDING]: '待付款',
+  [OrderStatus.PAID]: '待发货',
+  [OrderStatus.RECEIVED]: '待收货',
+  [OrderStatus.REVIEW]: '待评价',
+  [OrderStatus.COMPLETED]: '已完成',
+  [OrderStatus.CANCELED]: '已取消',
+};
+
 const orderList = ref<UserOrder>();
 const orderPageDTO = ref<OrderPageDTO>({
   orderState: 0,
@@ -119,8 +134,19 @@ async function initUserOrder() {
 function tabChangeEvent(type: number) {
   if (orderPageDTO.value) {
     orderPageDTO.value.orderState = type;
+    orderPageDTO.value.page = 1;
     initUserOrder();
   }
+}
+
+function handleSizeChange(pageSize: number) {
+  orderPageDTO.value.pageSize = pageSize;
+  initUserOrder();
+}
+
+function handleCurrentChange(page: number) {
+  orderPageDTO.value.page = page;
+  initUserOrder();
 }
 
 onMounted(() => {
@@ -195,7 +221,7 @@ onMounted(() => {
       text-align: center;
       padding: 20px;
 
-      >p {
+      > p {
         padding-top: 10px;
       }
 

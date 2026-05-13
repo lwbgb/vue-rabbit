@@ -64,7 +64,7 @@ interface OrderItemSku {
 }
 
 export interface UserOrder {
-    count: number;
+    counts: number;
     page: number;
     pageSize: number;
     pages: number;

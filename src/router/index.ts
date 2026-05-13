@@ -35,7 +35,7 @@ const router = createRouter({
                     path: 'member',
                     component: member,
                     children: [
-                        { path: 'user', component: userInfo },
+                        { path: '', component: userInfo },
                         { path: 'order', component: userOrder },
                     ],
                 },
