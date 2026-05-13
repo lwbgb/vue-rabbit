@@ -101,9 +101,9 @@
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
               <h3>24h热榜</h3>
-              <good-item v-for="good in hotDayList" :key="good.id" :good="good"> </good-item>
+              <GoodsItem v-for="good in hotDayList" :key="good.id" :good="good" :dest-url="`/detail/${good.id}`" />
               <h3>本周热榜</h3>
-              <good-item v-for="good in hotWeekList" :key="good.id" :good="good"> </good-item>
+              <GoodsItem v-for="good in hotWeekList" :key="good.id" :good="good" :dest-url="`/detail/${good.id}`" />
             </div>
           </div>
         </div>
@@ -113,25 +113,14 @@
 </template>
 
 <script setup lang="ts">
-import { getDetail, getHotList } from '@/apis/detailApi';
-import type { Goods, GoodDetail, Sku } from '@/types/goods';
-import { onMounted, ref } from 'vue';
-import GoodItem from '../components/GoodsItem.vue';
+import type { Sku } from '@/types/goods';
+import { ref } from 'vue';
+import GoodsItem from '../components/GoodsItem.vue';
 import { ElMessage } from 'element-plus';
 import { useCartStore } from '@/stores/cartStore';
 import type { CartItem } from '@/types/cart';
-
-enum HotType {
-  Day = 1,
-  Week = 2,
-}
-
-const goodDetails = ref<GoodDetail>();
-const hotDayList = ref<Array<Goods>>();
-const hotWeekList = ref<Array<Goods>>();
-const num = ref(1);
-const sku = ref<Sku>();
-const cartStore = useCartStore();
+import { useDetail } from './composables/useDetail';
+import { useHot } from './composables/useHot';
 
 const props = defineProps({
   id: {
@@ -140,22 +129,11 @@ const props = defineProps({
   },
 });
 
-async function getGoodDetail() {
-  const res = await getDetail(props.id);
-  console.log(`getGoodDetail res:`, res);
-  goodDetails.value = res.data.result;
-}
-
-async function initHotList(limit?: number) {
-  const map = new Map();
-  map.set(HotType.Day, hotDayList);
-  map.set(HotType.Week, hotWeekList);
-  for (const [type, list] of map) {
-    const res = await getHotList(props.id, type, limit);
-    console.log(`getHotList type ${type} res:`, res);
-    list.value = res.data.result;
-  }
-}
+const { goodDetails } = useDetail(props);
+const { hotDayList, hotWeekList } = useHot(props);
+const num = ref(1);
+const sku = ref<Sku>();
+const cartStore = useCartStore();
 
 function skuChangeHandler(value: Sku) {
   console.log(`skuChangeHandler sku:`, value);
@@ -186,11 +164,6 @@ function addToCart() {
     ElMessage.warning('请选择商品规格！');
   }
 }
-
-onMounted(() => {
-  getGoodDetail();
-  initHotList(8);
-});
 </script>
 
 <style scoped lang="scss">
@@ -224,16 +197,21 @@ onMounted(() => {
     .goods-aside {
       width: 280px;
       min-height: 1000px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
       h3 {
+        width: inherit;
         height: 70px;
         background: $helpColor;
         color: #fff;
         font-size: 18px;
         line-height: 70px;
-        padding-left: 25px;
+        // padding-left: 25px;
         margin-bottom: 10px;
         font-weight: normal;
+        text-align: center;
       }
     }
   }

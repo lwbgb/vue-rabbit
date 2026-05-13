@@ -34,6 +34,7 @@ const router = createRouter({
                 {
                     path: 'member',
                     component: member,
+                    // 三级路由
                     children: [
                         { path: '', component: userInfo },
                         { path: 'order', component: userOrder },

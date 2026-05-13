@@ -4,7 +4,8 @@
     <div class="bread-container">
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/category/${subCategoryInfo?.parentId}` }">{{ subCategoryInfo?.parentName }}
+        <el-breadcrumb-item :to="{ path: `/category/${subCategoryInfo?.parentId}` }"
+          >{{ subCategoryInfo?.parentName }}
         </el-breadcrumb-item>
         <el-breadcrumb-item>{{ subCategoryInfo?.name }}</el-breadcrumb-item>
       </el-breadcrumb>
@@ -19,12 +20,12 @@
       <!-- 商品列表-->
       <!-- 1. v-infinite-scroll 实现无限滚动 -->
       <!-- <div class="body" v-infinite-scroll="load" :infinite-scroll-disabled="disabled" infinite-scroll-distance="100">
-        <good-item v-for="good in itemList" :key="good.id" :good="good"></good-item>
+        <goods-item v-for="good in itemList" :key="good.id" :good="good"></goods-item>
       </div> -->
 
       <!-- 2. el-scrollbar 实现无限滚动 -->
       <el-scrollbar @end-reached="loadMore" noresize="true" view-class="body" distance="80">
-        <good-item v-for="good in itemList" :key="good.id" :good="good" :dest-url="`/detail/${good.id}`"></good-item>
+        <goods-item v-for="good in itemList" :key="good.id" :good="good" :dest-url="`/detail/${good.id}`"></goods-item>
       </el-scrollbar>
     </div>
   </div>
@@ -35,17 +36,17 @@ import { getCategoryFilterById, getSubCategoryInfo, type SubCategoryPageDTO } fr
 import type { SubCategory } from '@/types/category';
 import type { Goods } from '@/types/goods';
 import type { PageResult } from '@/types/result';
-import { onMounted, ref } from 'vue';
-import GoodItem from '../components/GoodsItem.vue';
+import { ref, watchEffect } from 'vue';
+import GoodsItem from '../components/GoodsItem.vue';
 import type { ScrollbarDirection } from 'element-plus';
 
 const props = defineProps<{
-  id: string
+  id: string;
 }>();
 
 const subCategoryInfo = ref<SubCategory>();
-const getSubCategories = async () => {
-  const res = await getCategoryFilterById(props.id);
+const getSubCategories = async (id: string) => {
+  const res = await getCategoryFilterById(id);
   console.log(`getSubCategories, res:`, res);
   subCategoryInfo.value = res.data.result;
 };
@@ -67,9 +68,9 @@ const getSubCategory = async () => {
   itemList.value = res.data.result.items;
 };
 
-onMounted(() => {
-  getSubCategories();
-  getSubCategory();
+watchEffect(async () => {
+  await getSubCategories(props.id);
+  await getSubCategory();
   // 首次主动加载一页
   loadMore('bottom');
 });
