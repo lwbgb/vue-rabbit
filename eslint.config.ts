@@ -55,7 +55,7 @@ export default defineConfigWithVueTs(
             'vue/multi-word-component-names': [
                 'warn',
                 {
-                    ignores: ['index'],
+                    ignores: ['index', 'Sku'],
                 },
             ],
 

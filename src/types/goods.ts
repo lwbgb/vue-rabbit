@@ -28,13 +28,14 @@ export interface Sku {
     specsText?: string;
 }
 
-interface Spec {
+export interface Spec {
     id: number;
     name: string;
     values: Array<{
         name: string;
         picture: string;
         desc: string;
+        selected: boolean;
     }>;
 }
 
