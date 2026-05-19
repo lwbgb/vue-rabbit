@@ -18,25 +18,29 @@ interface property {
 }
 
 export interface Sku {
-    id?: number;
+    id: number;
     skuId?: number;
     skuCode: string;
     price: number;
     picture: string;
     oldPrice: number;
     inventory: number;
+    specs: Array<{ name: string; valueName: string }>;
     specsText?: string;
+}
+
+export interface SpecValue {
+    name: string;
+    picture: string;
+    desc: string;
+    selected: boolean;
+    disabled: boolean;
 }
 
 export interface Spec {
     id: number;
     name: string;
-    values: Array<{
-        name: string;
-        picture: string;
-        desc: string;
-        selected: boolean;
-    }>;
+    values: Array<SpecValue>;
 }
 
 export interface GoodDetail extends Goods {
