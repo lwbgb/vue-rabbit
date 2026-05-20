@@ -3,20 +3,20 @@
     <dl v-for="item in goods.specs" :key="item.id">
       <dt>{{ item.name }}</dt>
       <dd>
-        <template v-for="val in item.values" :key="val.name">
+        <template v-for="value in item.values" :key="value.name">
           <!-- 图片类型规格 -->
           <img
-            v-if="val.picture"
-            :src="val.picture"
-            :title="val.name"
-            :class="{ selected: val.selected, disabled: val.disabled }"
-            @click="changeSelectedEvent(item, val)" />
+            v-if="value.picture"
+            :src="value.picture"
+            :title="value.name"
+            :class="{ selected: value.selected, disabled: value.disabled }"
+            @click="changeSelectedEvent(item, value)" />
           <!-- 文字类型规格 -->
           <span
             v-else
-            :class="{ selected: val.selected, disabled: val.disabled }"
-            @click="changeSelectedEvent(item, val)"
-            >{{ val.name }}</span
+            :class="{ selected: value.selected, disabled: value.disabled }"
+            @click="changeSelectedEvent(item, value)"
+            >{{ value.name }}</span
           >
         </template>
       </dd>
@@ -27,19 +27,19 @@
 <script setup lang="ts">
 import type { GoodDetail, Spec, SpecValue } from '@/types/goods';
 import { axiosInstance } from '@/utils/http';
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import bwPowerSet from './power-set';
 
 const goods = ref<GoodDetail>();
 const pathMap = ref<Map<string, Array<number>>>();
 
 const specArray = computed(() => {
-  const specArray: Array<string> = [];
+  const specArraySnap: Array<string | undefined> = [];
   goods.value?.specs.forEach(spec => {
     const specName = spec.values.find(value => value.selected)?.name;
-    specName ? specArray.push(specName) : null;
+    specName ? specArraySnap.push(specName) : specArraySnap.push(undefined);
   });
-  return specArray;
+  return specArraySnap;
 });
 
 const getGoods = async () => {
@@ -59,20 +59,20 @@ function changeSelectedEvent(spec: Spec, val: SpecValue) {
   if (val.selected) {
     val.selected = false;
   } else {
-    spec.values.forEach(value => (value.selected = value === val ? true : false));
+    spec.values.forEach(value => (value.selected = value.name === val.name ? true : false));
   }
   updateSpecStatus();
 }
 
 function updateSpecStatus() {
-  console.log('specPath: ', specArray.value);
-  const newSpecArray = specArray.value;
+  // 预测下一次所有可能点击的位置，判断可行性
   goods.value?.specs.forEach((spec, index) => {
+    // 深拷贝
+    const specArraySnap = structuredClone(specArray.value);
     spec.values.forEach(value => {
-      if (value.selected) {
-      }
-      newSpecArray[index] = value.name;
-      value.disabled = !pathMap.value?.has(newSpecArray.join('-'));
+      specArraySnap[index] = value.name;
+      const path = specArraySnap.filter(spec => spec).join('-');
+      value.disabled = !pathMap.value?.has(path);
     });
   });
 }
@@ -109,6 +109,8 @@ onMounted(async () => {
   if (goods.value) {
     pathMap.value = generatePathMap(goods.value);
     console.log('pathMap: ', pathMap.value);
+    // 初始化
+    updateSpecStatus();
   }
 });
 </script>
