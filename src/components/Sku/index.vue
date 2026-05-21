@@ -25,30 +25,36 @@
 </template>
 
 <script setup lang="ts">
-import type { GoodDetail, Spec, SpecValue } from '@/types/goods';
+import type { GoodDetail, Sku, Spec, SpecValue } from '@/types/goods';
 import { axiosInstance } from '@/utils/http';
 import { computed, onMounted, ref } from 'vue';
 import bwPowerSet from './power-set';
 
-const goods = ref<GoodDetail>();
+// const goods = ref<GoodDetail>();
 const pathMap = ref<Map<string, Array<number>>>();
+const { goods } = defineProps<{
+  goods: GoodDetail;
+}>();
+const emit = defineEmits<{
+  change: [value: Sku];
+}>();
 
 const specArray = computed(() => {
   const specArraySnap: Array<string | undefined> = [];
-  goods.value?.specs.forEach(spec => {
+  goods.specs.forEach(spec => {
     const specName = spec.values.find(value => value.selected)?.name;
     specName ? specArraySnap.push(specName) : specArraySnap.push(undefined);
   });
   return specArraySnap;
 });
 
-const getGoods = async () => {
-  // 1135076  初始化就有无库存的规格
-  // 1369155859933827074 更新之后有无库存项（蓝色-20cm-中国）
-  const res = await axiosInstance.get('http://pcapi-xiaotuxian-front-devtest.itheima.net/goods?id=1369155859933827074');
-  console.log('Sku, res:', res);
-  goods.value = res.data.result;
-};
+// const getGoods = async () => {
+//   // 1135076  初始化就有无库存的规格
+//   // 1369155859933827074 更新之后有无库存项（蓝色-20cm-中国）
+//   const res = await axiosInstance.get('http://pcapi-xiaotuxian-front-devtest.itheima.net/goods?id=1369155859933827074');
+//   console.log('Sku, res:', res);
+//   goods.value = res.data.result;
+// };
 
 function changeSelectedEvent(spec: Spec, val: SpecValue) {
   // 如果规格被禁用则无法点击
@@ -61,12 +67,27 @@ function changeSelectedEvent(spec: Spec, val: SpecValue) {
   } else {
     spec.values.forEach(value => (value.selected = value.name === val.name ? true : false));
   }
+
+  console.log('specArray: ', specArray.value);
+  // 更新禁用状态
   updateSpecStatus();
+
+  if (specArray.value.every(spec => spec)) {
+    console.log('商品规格完整');
+    const path = specArray.value.join('-');
+    const skuId = pathMap.value?.get(path)?.[0];
+    const sku = goods.skus.find(sku => sku.id === skuId);
+    if (sku) {
+      sku.skuId = sku.id;
+      sku.specsText = sku.specs.reduce((p, n) => `${p} ${n.name}：${n.valueName}`, '').trim();
+      emit('change', sku);
+    }
+  }
 }
 
 function updateSpecStatus() {
   // 预测下一次所有可能点击的位置，判断可行性
-  goods.value?.specs.forEach((spec, index) => {
+  goods.specs.forEach((spec, index) => {
     // 深拷贝
     const specArraySnap = structuredClone(specArray.value);
     spec.values.forEach(value => {
@@ -105,9 +126,9 @@ function generatePathMap(goods: GoodDetail): Map<string, Array<number>> {
 }
 
 onMounted(async () => {
-  await getGoods();
-  if (goods.value) {
-    pathMap.value = generatePathMap(goods.value);
+  // await getGoods();
+  if (goods) {
+    pathMap.value = generatePathMap(goods);
     console.log('pathMap: ', pathMap.value);
     // 初始化
     updateSpecStatus();

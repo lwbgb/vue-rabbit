@@ -3,12 +3,12 @@ import type { GoodDetail } from "@/types/goods";
 import { ref, watchEffect } from "vue";
 
 export const useDetail = (props: {id: string}) => {
-    const goodDetails = ref<GoodDetail>();
+    const goodsDetails = ref<GoodDetail>();
 
     async function getGoodDetail(id: string) {
         const res = await getDetail(id);
         console.log(`getGoodDetail res:`, res);
-        goodDetails.value = res.data.result;
+        goodsDetails.value = res.data.result;
     }
 
     // 路由缓存问题
@@ -16,5 +16,5 @@ export const useDetail = (props: {id: string}) => {
         await getGoodDetail(props.id);
     });
 
-    return { goodDetails };
+    return { goodsDetails };
 };;

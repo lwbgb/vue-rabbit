@@ -1,16 +1,16 @@
 <template>
   <div class="xtx-goods-page">
-    <div class="container" v-if="goodDetails">
+    <div class="container" v-if="goodsDetails">
       <div class="bread-container">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${goodDetails.categories[1]?.id}` }">
-            {{ goodDetails.categories[1]?.name }}
+          <el-breadcrumb-item :to="{ path: `/category/${goodsDetails.categories[1]?.id}` }">
+            {{ goodsDetails.categories[1]?.name }}
           </el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${goodDetails.categories[0]?.id}` }"
-            >{{ goodDetails.categories[0]?.name }}
+          <el-breadcrumb-item :to="{ path: `/category/${goodsDetails.categories[0]?.id}` }"
+            >{{ goodsDetails.categories[0]?.name }}
           </el-breadcrumb-item>
-          <el-breadcrumb-item>{{ goodDetails.name }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ goodsDetails.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <!-- 商品信息 -->
@@ -19,39 +19,39 @@
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-              <ImageView :image-list="goodDetails.mainPictures" />
+              <ImageView :image-list="goodsDetails.mainPictures" />
 
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
                   <p>销量人气</p>
-                  <p>{{ goodDetails.salesCount }}</p>
+                  <p>{{ goodsDetails.salesCount }}</p>
                   <p><i class="iconfont icon-task-filling"></i>销量人气</p>
                 </li>
                 <li>
                   <p>商品评价</p>
-                  <p>{{ goodDetails.commentCount }}</p>
+                  <p>{{ goodsDetails.commentCount }}</p>
                   <p><i class="iconfont icon-comment-filling"></i>查看评价</p>
                 </li>
                 <li>
                   <p>收藏人气</p>
-                  <p>{{ goodDetails.collectCount }}</p>
+                  <p>{{ goodsDetails.collectCount }}</p>
                   <p><i class="iconfont icon-favorite-filling"></i>收藏商品</p>
                 </li>
                 <li>
                   <p>品牌信息</p>
-                  <p>{{ goodDetails.brand?.name }}</p>
+                  <p>{{ goodsDetails.brand?.name }}</p>
                   <p><i class="iconfont icon-dynamic-filling"></i>品牌主页</p>
                 </li>
               </ul>
             </div>
             <div class="spec">
               <!-- 商品信息区 -->
-              <p class="g-name">{{ goodDetails.name }}</p>
-              <p class="g-desc">{{ goodDetails.desc }}</p>
+              <p class="g-name">{{ goodsDetails.name }}</p>
+              <p class="g-desc">{{ goodsDetails.desc }}</p>
               <p class="g-price">
-                <span>{{ goodDetails.price }}</span>
-                <span>{{ goodDetails.oldPrice }}</span>
+                <span>{{ goodsDetails.price }}</span>
+                <span>{{ goodsDetails.oldPrice }}</span>
               </p>
               <div class="g-service">
                 <dl>
@@ -69,7 +69,8 @@
                 </dl>
               </div>
               <!-- sku组件 -->
-              <XtxSku :goods="goodDetails" @change="skuChangeHandler" />
+              <!-- <XtxSku :goods="goodsDetails" @change="skuChangeHandler" /> -->
+              <Sku :goods="goodsDetails" @change="skuChangeHandler"/>
               <!-- 数据组件 -->
               <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" />
               <!-- 按钮组件 -->
@@ -88,13 +89,13 @@
                 <div class="goods-detail">
                   <!-- 属性 -->
                   <ul class="attrs">
-                    <li v-for="property in goodDetails.details.properties" :key="property.value">
+                    <li v-for="property in goodsDetails.details.properties" :key="property.value">
                       <span class="dt">{{ property.name }}</span>
                       <span class="dd">{{ property.value }}</span>
                     </li>
                   </ul>
                   <!-- 图片 -->
-                  <img v-for="image in goodDetails.details.pictures" :key="image" :src="image" />
+                  <img v-for="image in goodsDetails.details.pictures" :key="image" :src="image" />
                 </div>
               </div>
             </div>
@@ -129,7 +130,7 @@ const props = defineProps({
   },
 });
 
-const { goodDetails } = useDetail(props);
+const { goodsDetails } = useDetail(props);
 const { hotDayList, hotWeekList } = useHot(props);
 const num = ref(1);
 const sku = ref<Sku>();
@@ -148,12 +149,12 @@ function addToCart() {
   if (sku.value?.skuId) {
     ElMessage.success('成功加入购物车！');
     const cartItem: CartItem = {
-      id: goodDetails.value!.id,
-      name: goodDetails.value!.name,
+      id: goodsDetails.value!.id,
+      name: goodsDetails.value!.name,
       picture:
-        goodDetails.value?.skus.find(item => item.id === sku.value?.skuId)?.picture! ??
-        goodDetails.value?.mainPictures[0],
-      price: goodDetails.value!.price,
+        goodsDetails.value?.skus.find(item => item.id === sku.value?.skuId)?.picture! ??
+        goodsDetails.value?.mainPictures[0],
+      price: goodsDetails.value!.price,
       count: num.value,
       skuId: sku.value.skuId,
       attrsText: sku.value.specsText!,

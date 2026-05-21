@@ -133,7 +133,7 @@ export default {
       // 触发change事件将sku数据传递出去
       const selectedArr = getSelectedArr(props.goods.specs).filter(value => value);
       // 如果选中得规格数量和传入得规格总数相等则传出完整信息(都选择了)
-      // 否则传出空对象
+      // 否则传出空对象 
       if (selectedArr.length === props.goods.specs.length) {
         // 从路径字典中得到skuId
         const skuId = pathMap[selectedArr.join(spliter)][0];
